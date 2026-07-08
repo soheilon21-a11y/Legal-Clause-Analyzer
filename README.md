@@ -1,4 +1,13 @@
 # ⚖️ Legal Clause Analyzer
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+
+![FastAPI](https://img.shields.io/badge/FastAPI-Framework-green)
+
+![License](https://img.shields.io/badge/License-Educational-lightgrey)
+
+![Status](https://img.shields.io/badge/Status-v1.0_Stable-success)
+
+![Local LLM](https://img.shields.io/badge/LLM-Llama3-orange) 
 
 A privacy-first AI-powered legal contract analyzer that detects legal clauses, evaluates GDPR and EU AI Act compliance, calculates risk scores, and generates professional compliance reports — all running locally.
 
