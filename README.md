@@ -11,6 +11,15 @@
 
 A privacy-first AI-powered legal contract analyzer that detects legal clauses, evaluates GDPR and EU AI Act compliance, calculates risk scores, and generates professional compliance reports — all running locally.
 
+## Highlights
+
+- Privacy-first architecture
+- Local Llama 3 integration
+- GDPR readiness assessment
+- EU AI Act compliance assessment
+- Professional PDF compliance reports
+- FastAPI REST API 
+
 ---
 
 # Overview
@@ -49,6 +58,24 @@ The project combines rule-based legal analysis with a locally running Large Lang
 No contract data is transmitted to external AI providers.
 
 ---
+
+## API Documentation
+
+The project exposes a REST API built with FastAPI.
+
+### Swagger UI
+
+![Swagger UI](images/swagger.png)
+
+---
+
+## Sample Compliance Report
+
+Below is an example of the automatically generated PDF compliance report.
+
+![PDF Report](images/pdf-report.png) 
+
+--- 
 
 # Architecture
 
@@ -97,6 +124,9 @@ No contract data is transmitted to external AI providers.
 Legal-Clause-Analyzer/
 
 │
+├── images/
+│   ├── pdf-report.png
+│   └── swagger.png
 ├── main.py
 ├── requirements.txt
 ├── README.md
@@ -256,3 +286,6 @@ The generated reports are compliance-readiness assessments and do not constitute
 Developed by Soheil
 
 Legal Technology • AI Compliance • FastAPI • Local LLMs 
+
+GitHub:
+https://github.com/soheilon21-a11y 
