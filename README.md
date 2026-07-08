@@ -101,7 +101,7 @@ Legal-Clause-Analyzer/
 Clone the repository
 
 ```bash
-git clone https://github.com/your-username/Legal-Clause-Analyzer.git
+git clone https://github.com/soheilon21-a11y/Legal-Clause-Analyzer.git
 ```
 
 Install dependencies
