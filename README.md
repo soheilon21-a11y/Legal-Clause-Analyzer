@@ -91,7 +91,7 @@ Legal-Clause-Analyzer/
 ├── main.py
 ├── requirements.txt
 ├── README.md
-└── ...
+└── .gitignore
 ```
 
 ---
