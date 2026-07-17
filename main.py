@@ -24,9 +24,10 @@ client = OpenAI(
 
 app = FastAPI(
     title="Legal Clause Analyzer",
-    version="0.1.0",
+    version="1.2",
     description=(
-        "Privacy-first legal clause analyzer with local LLM support."
+        "Privacy-first legal clause analyzer with local LLM support. "
+        "Supports PDF, DOCX and Contract Comparison reports."
     ),
 )
 latest_analysis = {}
