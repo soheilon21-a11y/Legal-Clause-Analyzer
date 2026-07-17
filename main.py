@@ -5,7 +5,7 @@ from docx import Document
 from fastapi import FastAPI, UploadFile, File, HTTPException                
 from openai import OpenAI
 from pydantic import BaseModel, Field
-from reportlab.platypus import SimpleDocTemplate, Paragraph 
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.platypus import Table, TableStyle 
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
@@ -30,6 +30,7 @@ app = FastAPI(
     ),
 )
 latest_analysis = {}
+latest_comparison = {}
 
 
 class AnalyzeRequest(BaseModel):
@@ -727,6 +728,744 @@ async def analyze_docx(
             "demonstration only. It is not legal advice."
         ),
     }
+
+
+def compare_analysis_results(
+    result_a: dict[str, Any],
+    result_b: dict[str, Any],
+) -> dict[str, Any]:
+    """Compare two full analysis results.
+
+    Returns a structured comparison of detected clauses and risk/readiness
+    scores without generating PDFs or LLM summaries.
+    """
+
+    findings_a = result_a.get("findings", [])
+    findings_b = result_b.get("findings", [])
+
+    clauses_a = {f["clause_type"] for f in findings_a}
+    clauses_b = {f["clause_type"] for f in findings_b}
+
+    added = sorted(clauses_b - clauses_a)
+    removed = sorted(clauses_a - clauses_b)
+    common = sorted(clauses_a & clauses_b)
+
+    scores_a = result_a.get("risk_scores", {})
+    scores_b = result_b.get("risk_scores", {})
+
+    def score_delta(key: str) -> dict[str, Any]:
+        value_a = scores_a.get(key, 0)
+        value_b = scores_b.get(key, 0)
+        diff = value_b - value_a
+
+        if diff > 0:
+            trend = "increased"
+        elif diff < 0:
+            trend = "decreased"
+        else:
+            trend = "unchanged"
+
+        return {
+            "contract_a": value_a,
+            "contract_b": value_b,
+            "difference": diff,
+            "trend": trend,
+        }
+
+    return {
+        "clause_comparison": {
+            "contract_a_clause_types": sorted(clauses_a),
+            "contract_b_clause_types": sorted(clauses_b),
+            "added": added,
+            "removed": removed,
+            "common": common,
+        },
+        "score_comparison": {
+            "overall_risk_score": score_delta("overall_risk_score"),
+            "gdpr_readiness_score": score_delta("gdpr_readiness_score"),
+            "eu_ai_act_readiness_score": score_delta(
+                "eu_ai_act_readiness_score"
+            ),
+        },
+        "summary": {
+            "added_clauses_count": len(added),
+            "removed_clauses_count": len(removed),
+            "common_clauses_count": len(common),
+            "total_clauses_contract_a": len(findings_a),
+            "total_clauses_contract_b": len(findings_b),
+        },
+    }
+
+
+def _join_items(items: list[Any], fallback: str = "—") -> str:
+    """Return a comma-separated string or a fallback placeholder."""
+    if not items:
+        return fallback
+    return ", ".join(str(item) for item in items)
+
+
+def _risk_score_color(score: int) -> Any:
+    """Color for an overall risk score (higher is worse)."""
+    if score >= 70:
+        return colors.red
+    if score >= 40:
+        return colors.orange
+    return colors.green
+
+
+def _readiness_score_color(score: int) -> Any:
+    """Color for a readiness score (higher is better)."""
+    if score >= 80:
+        return colors.green
+    if score >= 50:
+        return colors.orange
+    return colors.red
+
+
+
+
+def _pdf_heading(
+    story: list[Any],
+    styles: Any,
+    text: str,
+    style: str = "Heading2",
+) -> None:
+    story.append(Paragraph(text, styles[style]))
+
+
+def _pdf_body(
+    story: list[Any],
+    styles: Any,
+    text: str,
+) -> None:
+    story.append(Paragraph(text, styles["BodyText"]))
+
+
+def _pdf_bullets(
+    story: list[Any],
+    styles: Any,
+    items: list[str],
+    prefix: str = "• ",
+) -> None:
+    for item in items:
+        story.append(Paragraph(f"{prefix}{item}", styles["BodyText"]))
+
+
+def _pdf_labeled_bullets(
+    story: list[Any],
+    styles: Any,
+    title: str,
+    sections: list[tuple[str, list[str]]],
+    fallback: str = "• None detected.",
+) -> None:
+    _pdf_heading(story, styles, title, "Heading3")
+    for label, items in sections:
+        _pdf_body(story, styles, f"<b>Contract {label}</b>")
+        if items:
+            _pdf_bullets(story, styles, items)
+        else:
+            _pdf_body(story, styles, fallback)
+
+
+def _base_table_style(align: str = "LEFT") -> TableStyle:
+    """Return the common table style used across PDF reports."""
+    return TableStyle(
+        [
+            ("BACKGROUND", (0, 0), (-1, 0), colors.darkblue),
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+            ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+            ("GRID", (0, 0), (-1, -1), 1, colors.grey),
+            ("BOX", (0, 0), (-1, -1), 1, colors.black),
+            ("ALIGN", (0, 0), (-1, -1), align),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ]
+    )
+
+
+def _make_table(
+    rows: list[list[str]],
+    colWidths: list[Any],
+    align: str = "LEFT",
+    first_col_bold: bool = True,
+    extra_commands: list[tuple[Any, ...]] | None = None,
+) -> Table:
+    """Build a styled ReportLab Table from rows and common style rules."""
+    style = _base_table_style(align)
+    if first_col_bold:
+        style.add("FONTNAME", (0, 1), (0, -1), "Helvetica-Bold")
+    for command in extra_commands or []:
+        style.add(*command)
+    table = Table(rows, colWidths=colWidths)
+    table.setStyle(style)
+    return table
+
+
+def _contract_summary_table(
+    filename: str,
+    findings: list[dict[str, Any]],
+    risk_scores: dict[str, int],
+    gdpr_check: dict[str, Any],
+    ai_act_check: dict[str, Any],
+) -> Table:
+    """Build the attribute/value table for a single contract summary."""
+    rows: list[list[str]] = [
+        ["Attribute", "Value"],
+        ["Filename", filename],
+        ["Detected clauses", str(len(findings))],
+        ["Clause types", _join_items([f["clause_type"] for f in findings])],
+        [
+            "Overall risk score",
+            str(risk_scores.get("overall_risk_score", 0)),
+        ],
+        [
+            "GDPR readiness score",
+            str(risk_scores.get("gdpr_readiness_score", 0)),
+        ],
+        [
+            "EU AI Act readiness score",
+            str(risk_scores.get("eu_ai_act_readiness_score", 0)),
+        ],
+        [
+            "Personal data detected",
+            "Yes" if gdpr_check.get("personal_data_detected") else "No",
+        ],
+        [
+            "Sensitive data detected",
+            "Yes" if gdpr_check.get("sensitive_data_detected") else "No",
+        ],
+        [
+            "GDPR missing controls",
+            _join_items(gdpr_check.get("missing_controls", [])),
+        ],
+        [
+            "AI Act triggered",
+            "Yes" if ai_act_check.get("ai_act_triggered") else "No",
+        ],
+        [
+            "High-risk AI terms",
+            _join_items(ai_act_check.get("matched_high_risk_terms", [])),
+        ],
+        [
+            "AI Act missing controls",
+            _join_items(ai_act_check.get("missing_controls", [])),
+        ],
+    ]
+    extra_commands = [
+        (
+            "TEXTCOLOR",
+            (1, 4),
+            (1, 4),
+            _risk_score_color(risk_scores.get("overall_risk_score", 0)),
+        ),
+        (
+            "TEXTCOLOR",
+            (1, 5),
+            (1, 5),
+            _readiness_score_color(risk_scores.get("gdpr_readiness_score", 0)),
+        ),
+        (
+            "TEXTCOLOR",
+            (1, 6),
+            (1, 6),
+            _readiness_score_color(
+                risk_scores.get("eu_ai_act_readiness_score", 0)
+            ),
+        ),
+    ]
+    return _make_table(
+        rows,
+        colWidths=[2.5 * inch, 4.5 * inch],
+        extra_commands=extra_commands,
+    )
+
+
+def _score_comparison_table(
+    score_comparison: dict[str, Any],
+) -> Table:
+    """Build the side-by-side risk/readiness score table with colors."""
+    def _row(metric_key: str, label: str) -> list[str]:
+        delta = score_comparison.get(metric_key, {})
+        return [
+            label,
+            str(delta.get("contract_a", 0)),
+            str(delta.get("contract_b", 0)),
+            str(delta.get("difference", 0)),
+            delta.get("trend", "unchanged"),
+        ]
+
+    rows = [
+        [
+            "Metric",
+            "Contract A",
+            "Contract B",
+            "Difference",
+            "Trend",
+        ],
+        _row("overall_risk_score", "Overall Risk"),
+        _row("gdpr_readiness_score", "GDPR Readiness"),
+        _row("eu_ai_act_readiness_score", "EU AI Act Readiness"),
+    ]
+
+    extra_commands: list[tuple[Any, ...]] = []
+    for row_idx, metric in enumerate(
+        [
+            "overall_risk_score",
+            "gdpr_readiness_score",
+            "eu_ai_act_readiness_score",
+        ],
+        start=1,
+    ):
+        delta = score_comparison.get(metric, {})
+        value_a = delta.get("contract_a", 0)
+        value_b = delta.get("contract_b", 0)
+        diff = delta.get("difference", 0)
+
+        if metric == "overall_risk_score":
+            extra_commands.append(
+                (
+                    "TEXTCOLOR",
+                    (1, row_idx),
+                    (1, row_idx),
+                    _risk_score_color(value_a),
+                )
+            )
+            extra_commands.append(
+                (
+                    "TEXTCOLOR",
+                    (2, row_idx),
+                    (2, row_idx),
+                    _risk_score_color(value_b),
+                )
+            )
+            extra_commands.append(
+                (
+                    "TEXTCOLOR",
+                    (3, row_idx),
+                    (3, row_idx),
+                    colors.red if diff > 0 else colors.green,
+                )
+            )
+        else:
+            extra_commands.append(
+                (
+                    "TEXTCOLOR",
+                    (1, row_idx),
+                    (1, row_idx),
+                    _readiness_score_color(value_a),
+                )
+            )
+            extra_commands.append(
+                (
+                    "TEXTCOLOR",
+                    (2, row_idx),
+                    (2, row_idx),
+                    _readiness_score_color(value_b),
+                )
+            )
+            extra_commands.append(
+                (
+                    "TEXTCOLOR",
+                    (3, row_idx),
+                    (3, row_idx),
+                    colors.green if diff > 0 else colors.red,
+                )
+            )
+
+    return _make_table(
+        rows,
+        colWidths=[2.0 * inch, 1.4 * inch, 1.4 * inch, 1.2 * inch, 1.0 * inch],
+        align="CENTER",
+        extra_commands=extra_commands,
+    )
+
+
+def generate_comparison_pdf(
+    contract_a_filename: str,
+    contract_b_filename: str,
+    contract_a_analysis: dict[str, Any],
+    contract_b_analysis: dict[str, Any],
+    comparison: dict[str, Any],
+) -> BytesIO:
+    """Generate a professional side-by-side comparison PDF report."""
+
+    buffer = BytesIO()
+    document = SimpleDocTemplate(
+        buffer,
+        rightMargin=40,
+        leftMargin=40,
+        topMargin=40,
+        bottomMargin=40,
+    )
+
+    styles = getSampleStyleSheet()
+    story: list[Any] = []
+
+    findings_a = contract_a_analysis.get("findings", [])
+    findings_b = contract_b_analysis.get("findings", [])
+    risk_a = contract_a_analysis.get("risk_scores", {})
+    risk_b = contract_b_analysis.get("risk_scores", {})
+    gdpr_a = contract_a_analysis.get("gdpr_check", {})
+    gdpr_b = contract_b_analysis.get("gdpr_check", {})
+    ai_a = contract_a_analysis.get("ai_act_check", {})
+    ai_b = contract_b_analysis.get("ai_act_check", {})
+
+    score_comparison = comparison.get("score_comparison", {})
+    clause_comparison = comparison.get("clause_comparison", {})
+    summary = comparison.get("summary", {})
+
+    # Title
+    _pdf_heading(story, styles, "Contract Comparison Report", "Heading1")
+    _pdf_heading(
+        story,
+        styles,
+        f"{contract_a_filename} <b>vs</b> {contract_b_filename}",
+        "Heading2",
+    )
+    _pdf_body(story, styles, "Generated locally by Legal Clause Analyzer.")
+    story.append(Spacer(1, 0.2 * inch))
+
+    # Executive Summary
+    _pdf_heading(story, styles, "Executive Summary")
+    executive_bullets = [
+        (
+            f"Contract A ({contract_a_filename}) contains "
+            f"<b>{len(findings_a)}</b> detected clause(s)."
+        ),
+        (
+            f"Contract B ({contract_b_filename}) contains "
+            f"<b>{len(findings_b)}</b> detected clause(s)."
+        ),
+        (
+            f"Common clause types: <b>{summary.get('common_clauses_count', 0)}</b>; "
+            f"added in Contract B: <b>{summary.get('added_clauses_count', 0)}</b>; "
+            f"removed from Contract A: <b>{summary.get('removed_clauses_count', 0)}</b>."
+        ),
+        (
+            f"Overall risk: Contract A <b>{risk_a.get('overall_risk_score', 0)}</b>, "
+            f"Contract B <b>{risk_b.get('overall_risk_score', 0)}</b> "
+            f"(difference {score_comparison.get('overall_risk_score', {}).get('difference', 0)})."
+        ),
+        (
+            f"GDPR readiness: Contract A <b>{risk_a.get('gdpr_readiness_score', 0)}</b>, "
+            f"Contract B <b>{risk_b.get('gdpr_readiness_score', 0)}</b>."
+        ),
+        (
+            f"EU AI Act readiness: Contract A <b>{risk_a.get('eu_ai_act_readiness_score', 0)}</b>, "
+            f"Contract B <b>{risk_b.get('eu_ai_act_readiness_score', 0)}</b>."
+        ),
+    ]
+    _pdf_bullets(story, styles, executive_bullets)
+    _pdf_body(
+        story,
+        styles,
+        (
+            "This comparison is intended only as a compliance-readiness "
+            "assessment and must not be considered legal advice."
+        ),
+    )
+    story.append(Spacer(1, 0.2 * inch))
+
+    # Contract A Summary
+    _pdf_heading(story, styles, "Contract A Summary")
+    story.append(
+        _contract_summary_table(
+            contract_a_filename,
+            findings_a,
+            risk_a,
+            gdpr_a,
+            ai_a,
+        )
+    )
+    story.append(Spacer(1, 0.2 * inch))
+
+    # Contract B Summary
+    _pdf_heading(story, styles, "Contract B Summary")
+    story.append(
+        _contract_summary_table(
+            contract_b_filename,
+            findings_b,
+            risk_b,
+            gdpr_b,
+            ai_b,
+        )
+    )
+    story.append(Spacer(1, 0.2 * inch))
+
+    # Clause Comparison
+    _pdf_heading(story, styles, "Clause Comparison")
+    clause_rows = [
+        ["Item", "Contract A", "Contract B"],
+        [
+            "Total detected clauses",
+            str(len(findings_a)),
+            str(len(findings_b)),
+        ],
+        [
+            "Clause types",
+            _join_items(clause_comparison.get("contract_a_clause_types", [])),
+            _join_items(clause_comparison.get("contract_b_clause_types", [])),
+        ],
+        [
+            "Common clause types",
+            _join_items(clause_comparison.get("common", [])),
+            _join_items(clause_comparison.get("common", [])),
+        ],
+        [
+            "Added in Contract B",
+            "—",
+            _join_items(clause_comparison.get("added", [])),
+        ],
+        [
+            "Removed from Contract A",
+            _join_items(clause_comparison.get("removed", [])),
+            "—",
+        ],
+    ]
+    story.append(
+        _make_table(
+            clause_rows,
+            colWidths=[2.2 * inch, 2.4 * inch, 2.4 * inch],
+        )
+    )
+    story.append(Spacer(1, 0.2 * inch))
+
+    # Risk Score Comparison
+    _pdf_heading(story, styles, "Risk Score Comparison")
+    story.append(_score_comparison_table(score_comparison))
+    story.append(Spacer(1, 0.2 * inch))
+
+    # GDPR Comparison
+    _pdf_heading(story, styles, "GDPR Comparison")
+    gdpr_rows = [
+        ["Aspect", "Contract A", "Contract B"],
+        [
+            "Personal data detected",
+            "Yes" if gdpr_a.get("personal_data_detected") else "No",
+            "Yes" if gdpr_b.get("personal_data_detected") else "No",
+        ],
+        [
+            "Sensitive data detected",
+            "Yes" if gdpr_a.get("sensitive_data_detected") else "No",
+            "Yes" if gdpr_b.get("sensitive_data_detected") else "No",
+        ],
+        [
+            "Matched personal-data terms",
+            _join_items(gdpr_a.get("matched_personal_data_terms", [])),
+            _join_items(gdpr_b.get("matched_personal_data_terms", [])),
+        ],
+        [
+            "Matched sensitive-data terms",
+            _join_items(gdpr_a.get("matched_sensitive_data_terms", [])),
+            _join_items(gdpr_b.get("matched_sensitive_data_terms", [])),
+        ],
+        [
+            "Missing controls count",
+            str(len(gdpr_a.get("missing_controls", []))),
+            str(len(gdpr_b.get("missing_controls", []))),
+        ],
+        [
+            "Missing controls",
+            _join_items(gdpr_a.get("missing_controls", [])),
+            _join_items(gdpr_b.get("missing_controls", [])),
+        ],
+    ]
+    story.append(
+        _make_table(
+            gdpr_rows,
+            colWidths=[2.2 * inch, 2.4 * inch, 2.4 * inch],
+        )
+    )
+    _pdf_labeled_bullets(
+        story,
+        styles,
+        "GDPR Issues",
+        [
+            ("A", gdpr_a.get("issues", [])),
+            ("B", gdpr_b.get("issues", [])),
+        ],
+        fallback="• No GDPR issues detected.",
+    )
+    _pdf_labeled_bullets(
+        story,
+        styles,
+        "GDPR Recommendations",
+        [
+            ("A", gdpr_a.get("recommendations", [])),
+            ("B", gdpr_b.get("recommendations", [])),
+        ],
+        fallback="• No GDPR recommendations.",
+    )
+    story.append(Spacer(1, 0.2 * inch))
+
+    # EU AI Act Comparison
+    _pdf_heading(story, styles, "EU AI Act Comparison")
+    ai_rows = [
+        ["Aspect", "Contract A", "Contract B"],
+        [
+            "AI Act triggered",
+            "Yes" if ai_a.get("ai_act_triggered") else "No",
+            "Yes" if ai_b.get("ai_act_triggered") else "No",
+        ],
+        [
+            "Matched AI terms",
+            _join_items(ai_a.get("matched_ai_terms", [])),
+            _join_items(ai_b.get("matched_ai_terms", [])),
+        ],
+        [
+            "High-risk AI terms",
+            _join_items(ai_a.get("matched_high_risk_terms", [])),
+            _join_items(ai_b.get("matched_high_risk_terms", [])),
+        ],
+        [
+            "Missing controls count",
+            str(len(ai_a.get("missing_controls", []))),
+            str(len(ai_b.get("missing_controls", []))),
+        ],
+        [
+            "Missing controls",
+            _join_items(ai_a.get("missing_controls", [])),
+            _join_items(ai_b.get("missing_controls", [])),
+        ],
+    ]
+    story.append(
+        _make_table(
+            ai_rows,
+            colWidths=[2.2 * inch, 2.4 * inch, 2.4 * inch],
+        )
+    )
+    _pdf_labeled_bullets(
+        story,
+        styles,
+        "EU AI Act Issues",
+        [
+            ("A", ai_a.get("issues", [])),
+            ("B", ai_b.get("issues", [])),
+        ],
+        fallback="• No EU AI Act issues detected.",
+    )
+    _pdf_labeled_bullets(
+        story,
+        styles,
+        "EU AI Act Recommendations",
+        [
+            ("A", ai_a.get("recommendations", [])),
+            ("B", ai_b.get("recommendations", [])),
+        ],
+        fallback="• No EU AI Act recommendations.",
+    )
+    story.append(Spacer(1, 0.2 * inch))
+
+    _pdf_body(
+        story,
+        styles,
+        (
+            "Disclaimer: This report is generated for "
+            "compliance-readiness and demonstration purposes only and "
+            "does not constitute legal advice."
+        ),
+    )
+
+    document.build(story)
+    buffer.seek(0)
+    return buffer
+
+
+@app.post("/compare-contracts")
+async def compare_contracts(
+    file_a: UploadFile = File(...),
+    file_b: UploadFile = File(...),
+    use_llm: bool = False,
+) -> dict[str, Any]:
+    """Compare two contracts.
+
+    Accepts two PDF or DOCX files, extracts text from each, runs the
+    existing full analysis on both, and returns a structured comparison
+    of detected clauses and risk/readiness scores.
+    """
+
+    global latest_comparison
+
+    bytes_a = await file_a.read()
+    bytes_b = await file_b.read()
+
+    try:
+        text_a = extract_text(bytes_a, file_a.filename)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Contract A: {exc}",
+        )
+
+    try:
+        text_b = extract_text(bytes_b, file_b.filename)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Contract B: {exc}",
+        )
+
+    result_a = run_full_analysis(text_a, use_llm)
+    result_b = run_full_analysis(text_b, use_llm)
+
+    comparison = compare_analysis_results(result_a, result_b)
+
+    latest_comparison = {
+        "file_a": file_a.filename,
+        "file_b": file_b.filename,
+        "result_a": result_a,
+        "result_b": result_b,
+        "comparison": comparison,
+    }
+
+    return {
+        "project": "Legal Clause Analyzer",
+        "contract_a_filename": file_a.filename,
+        "contract_b_filename": file_b.filename,
+        "characters_extracted": {
+            "contract_a": len(text_a),
+            "contract_b": len(text_b),
+            "total": len(text_a) + len(text_b),
+        },
+        "contract_a_analysis": result_a,
+        "contract_b_analysis": result_b,
+        "comparison": comparison,
+        "disclaimer": (
+            "This output is for compliance-readiness and "
+            "demonstration only. It is not legal advice."
+        ),
+    }
+
+
+@app.get("/download-comparison-report")
+def download_comparison_report():
+    """Download the most recent contract comparison as a PDF."""
+
+    global latest_comparison
+
+    if not latest_comparison:
+        return {
+            "error": (
+                "No comparison available. Please compare two contracts first."
+            )
+        }
+
+    pdf = generate_comparison_pdf(
+        contract_a_filename=latest_comparison["file_a"],
+        contract_b_filename=latest_comparison["file_b"],
+        contract_a_analysis=latest_comparison["result_a"],
+        contract_b_analysis=latest_comparison["result_b"],
+        comparison=latest_comparison["comparison"],
+    )
+
+    return StreamingResponse(
+        pdf,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": (
+                "attachment; filename=Comparison_Report.pdf"
+            )
+        },
+    )
 
 
 def generate_pdf_report(
