@@ -1,7 +1,8 @@
 from typing import Any
 import fitz             
+from docx import Document
 
-from fastapi import FastAPI, UploadFile, File                
+from fastapi import FastAPI, UploadFile, File, HTTPException                
 from openai import OpenAI
 from pydantic import BaseModel, Field
 from reportlab.platypus import SimpleDocTemplate, Paragraph 
@@ -558,40 +559,10 @@ def calculate_risk_score(
     }
 
 
-def extract_text_from_pdf(pdf_path: str) -> str:
-    """Extract text from a PDF file."""
-
-    document = fitz.open(pdf_path)
-
-    text = ""
-
-    for page in document:
-        text += page.get_text()
-
-    document.close()
-
-    return text
-
-
-@app.post("/analyze-pdf")
-async def analyze_pdf(
-    file: UploadFile = File(...),
-    use_llm: bool = False,
+def run_full_analysis(
+    contract_text: str,
+    use_llm: bool,
 ) -> dict[str, Any]:
-
-    global latest_analysis 
-
-    pdf_bytes = await file.read()
-
-    document = fitz.open(stream=pdf_bytes, filetype="pdf")
-
-    contract_text = ""
-
-    for page in document:
-        contract_text += page.get_text()
-
-    document.close()
-
     findings = detect_clauses(contract_text)
 
     ai_act_check = ai_act_compliance_check(contract_text)
@@ -614,24 +585,143 @@ async def analyze_pdf(
             gdpr_check,
         )
 
+    return {
+        "findings": findings,
+        "risk_scores": risk_scores,
+        "ai_act_check": ai_act_check,
+        "gdpr_check": gdpr_check,
+        "llm_summary": llm_summary,
+    }
+
+
+def extract_text_from_pdf_bytes(pdf_bytes: bytes) -> str:
+    """Extract text from PDF bytes."""
+
+    document = fitz.open(stream=pdf_bytes, filetype="pdf")
+
+    text = ""
+
+    for page in document:
+        text += page.get_text()
+
+    document.close()
+
+    return text
+
+
+def extract_text_from_docx_bytes(docx_bytes: bytes) -> str:
+    """Extract text from DOCX bytes, including paragraphs and tables."""
+
+    document = Document(BytesIO(docx_bytes))
+
+    text_parts: list[str] = []
+
+    for paragraph in document.paragraphs:
+        if paragraph.text.strip():
+            text_parts.append(paragraph.text)
+
+    for table in document.tables:
+        for row in table.rows:
+            row_text = [cell.text.strip() for cell in row.cells]
+            if any(row_text):
+                text_parts.append(" | ".join(row_text))
+
+    return "\n".join(text_parts)
+
+
+def extract_text(file_bytes: bytes, filename: str) -> str:
+    """Dispatch to the correct extractor based on file extension."""
+
+    lower_name = filename.lower()
+
+    if lower_name.endswith(".pdf"):
+        return extract_text_from_pdf_bytes(file_bytes)
+
+    if lower_name.endswith(".docx"):
+        return extract_text_from_docx_bytes(file_bytes)
+
+    raise ValueError(
+        f"Unsupported file format: {filename}. "
+        "Only PDF and DOCX files are currently supported."
+    )
+
+
+@app.post("/analyze-pdf")
+async def analyze_pdf(
+    file: UploadFile = File(...),
+    use_llm: bool = False,
+) -> dict[str, Any]:
+
+    global latest_analysis 
+
+    pdf_bytes = await file.read()
+
+    contract_text = extract_text(pdf_bytes, file.filename)
+
+    result = run_full_analysis(contract_text, use_llm)
+
     latest_analysis = {
-    "findings": findings,
-    "risk_scores": risk_scores,
-    "ai_act_check": ai_act_check,
-    "gdpr_check": gdpr_check,
-    "llm_summary": llm_summary,
-}
+        "findings": result["findings"],
+        "risk_scores": result["risk_scores"],
+        "ai_act_check": result["ai_act_check"],
+        "gdpr_check": result["gdpr_check"],
+        "llm_summary": result["llm_summary"],
+    }
 
 
     return {
         "project": "Legal Clause Analyzer",
         "source": file.filename,
         "characters_analyzed": len(contract_text),
-        "clause_findings": findings,
-        "ai_act_compliance_check": ai_act_check,
-        "gdpr_privacy_check": gdpr_check,
-        "risk_scores": risk_scores,
-        "llm_summary": llm_summary,
+        "clause_findings": result["findings"],
+        "ai_act_compliance_check": result["ai_act_check"],
+        "gdpr_privacy_check": result["gdpr_check"],
+        "risk_scores": result["risk_scores"],
+        "llm_summary": result["llm_summary"],
+        "disclaimer": (
+            "This output is for compliance-readiness and "
+            "demonstration only. It is not legal advice."
+        ),
+    }
+
+
+@app.post("/analyze-docx")
+async def analyze_docx(
+    file: UploadFile = File(...),
+    use_llm: bool = False,
+) -> dict[str, Any]:
+
+    global latest_analysis
+
+    if not file.filename.lower().endswith(".docx"):
+        raise HTTPException(
+            status_code=400,
+            detail="Only DOCX files are supported.",
+        )
+
+    docx_bytes = await file.read()
+
+    contract_text = extract_text(docx_bytes, file.filename)
+
+    result = run_full_analysis(contract_text, use_llm)
+
+    latest_analysis = {
+        "findings": result["findings"],
+        "risk_scores": result["risk_scores"],
+        "ai_act_check": result["ai_act_check"],
+        "gdpr_check": result["gdpr_check"],
+        "llm_summary": result["llm_summary"],
+    }
+
+    return {
+        "project": "Legal Clause Analyzer",
+        "source": file.filename,
+        "characters_analyzed": len(contract_text),
+        "clause_findings": result["findings"],
+        "ai_act_compliance_check": result["ai_act_check"],
+        "gdpr_privacy_check": result["gdpr_check"],
+        "risk_scores": result["risk_scores"],
+        "llm_summary": result["llm_summary"],
         "disclaimer": (
             "This output is for compliance-readiness and "
             "demonstration only. It is not legal advice."
@@ -945,20 +1035,7 @@ def read_root() -> dict[str, str]:
 
 @app.post("/analyze")
 def analyze_contract(request: AnalyzeRequest) -> dict[str, Any]:
-    findings = detect_clauses(request.contract_text)
-    ai_act_check = ai_act_compliance_check(request.contract_text)
-    gdpr_check = gdpr_privacy_check(request.contract_text)
-    risk_scores = calculate_risk_score(findings, ai_act_check, gdpr_check)
-    
-    llm_summary: str | None = None
-
-    if request.use_llm:
-        llm_summary = generate_llm_summary(
-            request.contract_text,
-            findings,
-            ai_act_check,
-            gdpr_check,
-        )
+    result = run_full_analysis(request.contract_text, request.use_llm)
 
     return {
         "project": "Legal Clause Analyzer",
@@ -966,11 +1043,11 @@ def analyze_contract(request: AnalyzeRequest) -> dict[str, Any]:
             "This prototype does not store contract text. "
             "Use synthetic or anonymized data for demos."
         ),
-        "clause_findings": findings,
-        "ai_act_compliance_check": ai_act_check,
-        "gdpr_privacy_check": gdpr_check,
-        "risk_scores": risk_scores,
-        "llm_summary": llm_summary,
+        "clause_findings": result["findings"],
+        "ai_act_compliance_check": result["ai_act_check"],
+        "gdpr_privacy_check": result["gdpr_check"],
+        "risk_scores": result["risk_scores"],
+        "llm_summary": result["llm_summary"],
         "disclaimer": (
             "This output is for compliance-readiness and product "
             "demonstration only. It is not legal advice."

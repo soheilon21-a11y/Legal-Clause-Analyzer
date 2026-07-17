@@ -32,7 +32,9 @@ The project combines rule-based legal analysis with a locally running Large Lang
 
 # Key Features
 
-✅ Local PDF contract analysis
+✅ Local PDF contract analysis 
+
+✅ Local DOCX contract analysis
 
 ✅ Automatic clause detection
 
@@ -191,6 +193,20 @@ Upload a PDF contract and receive:
 
 ---
 
+## Analyze DOCX
+
+```
+POST /analyze-docx
+```
+
+Upload a DOCX contract and receive:
+
+- Clause detection
+- GDPR analysis
+- EU AI Act analysis
+- Risk scores
+- Professional PDF report
+
 # Example Workflow
 
 ```
@@ -249,11 +265,12 @@ No contract text is sent to external cloud AI services.
 
 Current Version:
 
-**v1.0 Stable**
+**v1.1 Stable**
 
 Implemented:
 
 - PDF Upload
+- DOCX Upload
 - Local Llama 3 Integration
 - Clause Detection
 - GDPR Analysis
@@ -263,8 +280,7 @@ Implemented:
 
 Planned Features:
 
-- DOCX Upload
-- Compare Two Contracts
+- Compare Two Contracts 
 - Risk Dashboard
 - Docker Support
 - Unit Tests
