@@ -1,17 +1,23 @@
 from typing import Any
-import fitz             
+import os
+import tempfile
+from html import escape
+
+import fitz
 from docx import Document
 
-from fastapi import FastAPI, UploadFile, File, HTTPException                
+from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
+from fastapi.responses import FileResponse, StreamingResponse
 from openai import OpenAI
 from pydantic import BaseModel, Field
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.platypus import Table, TableStyle 
+from reportlab.platypus import Table, TableStyle
 from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
+from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.units import inch 
-from fastapi.responses import StreamingResponse 
-from io import BytesIO  
+from reportlab.lib.units import inch
+from io import BytesIO
 
 
 LOCAL_LLM_BASE_URL = "http://127.0.0.1:11434/v1"
@@ -44,6 +50,99 @@ class AnalyzeRequest(BaseModel):
         default=False,
         description="Use local Ollama LLM for a short summary.",
     )
+
+
+class Finding(BaseModel):
+    clause_type: str
+    risk_level: str
+    matched_keywords: list[str]
+    explanation: str
+
+
+class RiskScores(BaseModel):
+    overall_risk_score: int
+    gdpr_readiness_score: int
+    eu_ai_act_readiness_score: int
+
+
+class AIActCheck(BaseModel):
+    ai_act_triggered: bool
+    matched_ai_terms: list[str]
+    matched_high_risk_terms: list[str]
+    missing_controls: list[str]
+    issues: list[str]
+    recommendations: list[str]
+    summary: str
+
+
+class GDPRCheck(BaseModel):
+    personal_data_detected: bool
+    sensitive_data_detected: bool
+    matched_personal_data_terms: list[str]
+    matched_sensitive_data_terms: list[str]
+    missing_controls: list[str]
+    issues: list[str]
+    recommendations: list[str]
+
+
+class AnalysisResult(BaseModel):
+    findings: list[Finding]
+    risk_scores: RiskScores
+    ai_act_check: AIActCheck
+    gdpr_check: GDPRCheck
+    llm_summary: str | None
+
+
+class ClauseComparison(BaseModel):
+    contract_a_clause_types: list[str]
+    contract_b_clause_types: list[str]
+    added: list[str]
+    removed: list[str]
+    common: list[str]
+
+
+class ScoreDelta(BaseModel):
+    contract_a: int
+    contract_b: int
+    difference: int
+    trend: str
+
+
+class ScoreComparison(BaseModel):
+    overall_risk_score: ScoreDelta
+    gdpr_readiness_score: ScoreDelta
+    eu_ai_act_readiness_score: ScoreDelta
+
+
+class ComparisonSummary(BaseModel):
+    added_clauses_count: int
+    removed_clauses_count: int
+    common_clauses_count: int
+    total_clauses_contract_a: int
+    total_clauses_contract_b: int
+
+
+class Comparison(BaseModel):
+    clause_comparison: ClauseComparison
+    score_comparison: ScoreComparison
+    summary: ComparisonSummary
+
+
+class CharactersExtracted(BaseModel):
+    contract_a: int
+    contract_b: int
+    total: int
+
+
+class CompareContractsResponse(BaseModel):
+    project: str
+    contract_a_filename: str
+    contract_b_filename: str
+    characters_extracted: CharactersExtracted
+    contract_a_analysis: AnalysisResult
+    contract_b_analysis: AnalysisResult
+    comparison: Comparison
+    disclaimer: str
 
 
 CLAUSE_RULES: list[dict[str, Any]] = [
@@ -823,6 +922,23 @@ def _readiness_score_color(score: int) -> Any:
     return colors.red
 
 
+def _paragraph_cell(
+    text: Any,
+    style: Any,
+    bold: bool = False,
+    text_color: Any = None,
+) -> Paragraph:
+    """Return a ReportLab Paragraph with safe HTML escaping."""
+    if text is None:
+        text = "—"
+    safe_text = str(text)
+    safe_text = escape(safe_text)
+    safe_text = safe_text.replace("\n", "<br/>")
+    if bold:
+        safe_text = f"<b>{safe_text}</b>"
+    if text_color is not None:
+        style = style.clone("_colored", textColor=text_color)
+    return Paragraph(safe_text, style)
 
 
 def _pdf_heading(
@@ -873,30 +989,68 @@ def _base_table_style(align: str = "LEFT") -> TableStyle:
     return TableStyle(
         [
             ("BACKGROUND", (0, 0), (-1, 0), colors.darkblue),
+            ("TEXTCOLOR", (0, 0), (-1, -1), colors.black),
             ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
             ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
             ("GRID", (0, 0), (-1, -1), 1, colors.grey),
             ("BOX", (0, 0), (-1, -1), 1, colors.black),
             ("ALIGN", (0, 0), (-1, -1), align),
+            ("VALIGN", (0, 0), (-1, -1), "TOP"),
             ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("LEFTPADDING", (0, 0), (-1, -1), 6),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+            ("TOPPADDING", (0, 0), (-1, -1), 4),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
         ]
     )
 
 
 def _make_table(
-    rows: list[list[str]],
+    rows: list[list[Any]],
     colWidths: list[Any],
+    styles: Any,
     align: str = "LEFT",
     first_col_bold: bool = True,
     extra_commands: list[tuple[Any, ...]] | None = None,
+    repeat_rows: int = 1,
 ) -> Table:
-    """Build a styled ReportLab Table from rows and common style rules."""
+    """Build a styled ReportLab Table with Paragraph-based wrapping cells."""
+    alignment_map = {
+        "LEFT": TA_LEFT,
+        "CENTER": TA_CENTER,
+        "RIGHT": TA_RIGHT,
+    }
+    body_alignment = alignment_map.get(align, TA_LEFT)
+    body_style = styles["BodyText"].clone(
+        "_table_body",
+        alignment=body_alignment,
+    )
+    header_style = body_style.clone(
+        "_table_header",
+        textColor=colors.white,
+        fontName="Helvetica-Bold",
+    )
+
+    wrapped_rows: list[list[Paragraph]] = []
+
+    for row_idx, row in enumerate(rows):
+        wrapped_row: list[Paragraph] = []
+        for col_idx, value in enumerate(row):
+            if isinstance(value, Paragraph):
+                wrapped_row.append(value)
+            elif row_idx == 0:
+                wrapped_row.append(_paragraph_cell(value, header_style))
+            else:
+                is_bold = first_col_bold and col_idx == 0
+                wrapped_row.append(
+                    _paragraph_cell(value, body_style, bold=is_bold)
+                )
+        wrapped_rows.append(wrapped_row)
+
     style = _base_table_style(align)
-    if first_col_bold:
-        style.add("FONTNAME", (0, 1), (0, -1), "Helvetica-Bold")
     for command in extra_commands or []:
         style.add(*command)
-    table = Table(rows, colWidths=colWidths)
+    table = Table(wrapped_rows, colWidths=colWidths, repeatRows=repeat_rows)
     table.setStyle(style)
     return table
 
@@ -907,24 +1061,46 @@ def _contract_summary_table(
     risk_scores: dict[str, int],
     gdpr_check: dict[str, Any],
     ai_act_check: dict[str, Any],
+    styles: Any,
+    usable_width: float,
 ) -> Table:
     """Build the attribute/value table for a single contract summary."""
-    rows: list[list[str]] = [
+    label_width = 1.5 * inch
+    value_width = usable_width - label_width
+    body_style = styles["BodyText"]
+
+    overall_score = risk_scores.get("overall_risk_score", 0)
+    gdpr_score = risk_scores.get("gdpr_readiness_score", 0)
+    ai_score = risk_scores.get("eu_ai_act_readiness_score", 0)
+
+    rows: list[list[Any]] = [
         ["Attribute", "Value"],
         ["Filename", filename],
         ["Detected clauses", str(len(findings))],
         ["Clause types", _join_items([f["clause_type"] for f in findings])],
         [
             "Overall risk score",
-            str(risk_scores.get("overall_risk_score", 0)),
+            _paragraph_cell(
+                str(overall_score),
+                body_style,
+                text_color=_risk_score_color(overall_score),
+            ),
         ],
         [
             "GDPR readiness score",
-            str(risk_scores.get("gdpr_readiness_score", 0)),
+            _paragraph_cell(
+                str(gdpr_score),
+                body_style,
+                text_color=_readiness_score_color(gdpr_score),
+            ),
         ],
         [
             "EU AI Act readiness score",
-            str(risk_scores.get("eu_ai_act_readiness_score", 0)),
+            _paragraph_cell(
+                str(ai_score),
+                body_style,
+                text_color=_readiness_score_color(ai_score),
+            ),
         ],
         [
             "Personal data detected",
@@ -951,47 +1127,59 @@ def _contract_summary_table(
             _join_items(ai_act_check.get("missing_controls", [])),
         ],
     ]
-    extra_commands = [
-        (
-            "TEXTCOLOR",
-            (1, 4),
-            (1, 4),
-            _risk_score_color(risk_scores.get("overall_risk_score", 0)),
-        ),
-        (
-            "TEXTCOLOR",
-            (1, 5),
-            (1, 5),
-            _readiness_score_color(risk_scores.get("gdpr_readiness_score", 0)),
-        ),
-        (
-            "TEXTCOLOR",
-            (1, 6),
-            (1, 6),
-            _readiness_score_color(
-                risk_scores.get("eu_ai_act_readiness_score", 0)
-            ),
-        ),
-    ]
     return _make_table(
         rows,
-        colWidths=[2.5 * inch, 4.5 * inch],
-        extra_commands=extra_commands,
+        colWidths=[label_width, value_width],
+        styles=styles,
     )
 
 
 def _score_comparison_table(
     score_comparison: dict[str, Any],
+    styles: Any,
+    usable_width: float,
 ) -> Table:
     """Build the side-by-side risk/readiness score table with colors."""
-    def _row(metric_key: str, label: str) -> list[str]:
+    label_width = 1.5 * inch
+    value_width = (usable_width - label_width) / 4
+
+    body_style_left = styles["BodyText"].clone(
+        "_score_label",
+        alignment=TA_LEFT,
+    )
+    body_style_center = styles["BodyText"].clone(
+        "_score_value",
+        alignment=TA_CENTER,
+    )
+
+    def _row(metric_key: str, label: str) -> list[Any]:
         delta = score_comparison.get(metric_key, {})
+        value_a = delta.get("contract_a", 0)
+        value_b = delta.get("contract_b", 0)
+        diff = delta.get("difference", 0)
+        trend = delta.get("trend", "unchanged")
+
+        if metric_key == "overall_risk_score":
+            color_a = _risk_score_color(value_a)
+            color_b = _risk_score_color(value_b)
+            color_diff = colors.red if diff > 0 else colors.green
+        else:
+            color_a = _readiness_score_color(value_a)
+            color_b = _readiness_score_color(value_b)
+            color_diff = colors.green if diff > 0 else colors.red
+
         return [
-            label,
-            str(delta.get("contract_a", 0)),
-            str(delta.get("contract_b", 0)),
-            str(delta.get("difference", 0)),
-            delta.get("trend", "unchanged"),
+            _paragraph_cell(label, body_style_left, bold=True),
+            _paragraph_cell(
+                str(value_a), body_style_center, text_color=color_a
+            ),
+            _paragraph_cell(
+                str(value_b), body_style_center, text_color=color_b
+            ),
+            _paragraph_cell(
+                str(diff), body_style_center, text_color=color_diff
+            ),
+            _paragraph_cell(trend, body_style_center),
         ]
 
     rows = [
@@ -1007,76 +1195,12 @@ def _score_comparison_table(
         _row("eu_ai_act_readiness_score", "EU AI Act Readiness"),
     ]
 
-    extra_commands: list[tuple[Any, ...]] = []
-    for row_idx, metric in enumerate(
-        [
-            "overall_risk_score",
-            "gdpr_readiness_score",
-            "eu_ai_act_readiness_score",
-        ],
-        start=1,
-    ):
-        delta = score_comparison.get(metric, {})
-        value_a = delta.get("contract_a", 0)
-        value_b = delta.get("contract_b", 0)
-        diff = delta.get("difference", 0)
-
-        if metric == "overall_risk_score":
-            extra_commands.append(
-                (
-                    "TEXTCOLOR",
-                    (1, row_idx),
-                    (1, row_idx),
-                    _risk_score_color(value_a),
-                )
-            )
-            extra_commands.append(
-                (
-                    "TEXTCOLOR",
-                    (2, row_idx),
-                    (2, row_idx),
-                    _risk_score_color(value_b),
-                )
-            )
-            extra_commands.append(
-                (
-                    "TEXTCOLOR",
-                    (3, row_idx),
-                    (3, row_idx),
-                    colors.red if diff > 0 else colors.green,
-                )
-            )
-        else:
-            extra_commands.append(
-                (
-                    "TEXTCOLOR",
-                    (1, row_idx),
-                    (1, row_idx),
-                    _readiness_score_color(value_a),
-                )
-            )
-            extra_commands.append(
-                (
-                    "TEXTCOLOR",
-                    (2, row_idx),
-                    (2, row_idx),
-                    _readiness_score_color(value_b),
-                )
-            )
-            extra_commands.append(
-                (
-                    "TEXTCOLOR",
-                    (3, row_idx),
-                    (3, row_idx),
-                    colors.green if diff > 0 else colors.red,
-                )
-            )
-
     return _make_table(
         rows,
-        colWidths=[2.0 * inch, 1.4 * inch, 1.4 * inch, 1.2 * inch, 1.0 * inch],
+        colWidths=[label_width, value_width, value_width, value_width, value_width],
+        styles=styles,
         align="CENTER",
-        extra_commands=extra_commands,
+        first_col_bold=False,
     )
 
 
@@ -1092,6 +1216,7 @@ def generate_comparison_pdf(
     buffer = BytesIO()
     document = SimpleDocTemplate(
         buffer,
+        pagesize=A4,
         rightMargin=40,
         leftMargin=40,
         topMargin=40,
@@ -1099,6 +1224,13 @@ def generate_comparison_pdf(
     )
 
     styles = getSampleStyleSheet()
+    usable_width = document.width
+    label_width = 1.5 * inch
+    two_col_widths = [
+        label_width,
+        (usable_width - label_width) / 2,
+        (usable_width - label_width) / 2,
+    ]
     story: list[Any] = []
 
     findings_a = contract_a_analysis.get("findings", [])
@@ -1175,6 +1307,8 @@ def generate_comparison_pdf(
             risk_a,
             gdpr_a,
             ai_a,
+            styles,
+            usable_width,
         )
     )
     story.append(Spacer(1, 0.2 * inch))
@@ -1188,6 +1322,8 @@ def generate_comparison_pdf(
             risk_b,
             gdpr_b,
             ai_b,
+            styles,
+            usable_width,
         )
     )
     story.append(Spacer(1, 0.2 * inch))
@@ -1225,14 +1361,21 @@ def generate_comparison_pdf(
     story.append(
         _make_table(
             clause_rows,
-            colWidths=[2.2 * inch, 2.4 * inch, 2.4 * inch],
+            colWidths=two_col_widths,
+            styles=styles,
         )
     )
     story.append(Spacer(1, 0.2 * inch))
 
     # Risk Score Comparison
     _pdf_heading(story, styles, "Risk Score Comparison")
-    story.append(_score_comparison_table(score_comparison))
+    story.append(
+        _score_comparison_table(
+            score_comparison,
+            styles,
+            usable_width,
+        )
+    )
     story.append(Spacer(1, 0.2 * inch))
 
     # GDPR Comparison
@@ -1273,7 +1416,8 @@ def generate_comparison_pdf(
     story.append(
         _make_table(
             gdpr_rows,
-            colWidths=[2.2 * inch, 2.4 * inch, 2.4 * inch],
+            colWidths=two_col_widths,
+            styles=styles,
         )
     )
     _pdf_labeled_bullets(
@@ -1331,7 +1475,8 @@ def generate_comparison_pdf(
     story.append(
         _make_table(
             ai_rows,
-            colWidths=[2.2 * inch, 2.4 * inch, 2.4 * inch],
+            colWidths=two_col_widths,
+            styles=styles,
         )
     )
     _pdf_labeled_bullets(
@@ -1371,12 +1516,12 @@ def generate_comparison_pdf(
     return buffer
 
 
-@app.post("/compare-contracts")
+@app.post("/compare-contracts", response_model=CompareContractsResponse)
 async def compare_contracts(
     file_a: UploadFile = File(...),
     file_b: UploadFile = File(...),
     use_llm: bool = False,
-) -> dict[str, Any]:
+) -> CompareContractsResponse:
     """Compare two contracts.
 
     Accepts two PDF or DOCX files, extracts text from each, runs the
@@ -1437,18 +1582,33 @@ async def compare_contracts(
     }
 
 
-@app.get("/download-comparison-report")
-def download_comparison_report():
+@app.get(
+    "/download-comparison-report",
+    response_class=FileResponse,
+    responses={
+        200: {
+            "description": "Contract comparison PDF report",
+            "content": {
+                "application/pdf": {
+                    "schema": {"type": "string", "format": "binary"},
+                }
+            },
+        },
+        404: {"description": "No comparison has been generated yet"},
+    },
+)
+def download_comparison_report(
+    background_tasks: BackgroundTasks,
+) -> FileResponse:
     """Download the most recent contract comparison as a PDF."""
 
     global latest_comparison
 
     if not latest_comparison:
-        return {
-            "error": (
-                "No comparison available. Please compare two contracts first."
-            )
-        }
+        raise HTTPException(
+            status_code=404,
+            detail="No comparison available. Please compare two contracts first.",
+        )
 
     pdf = generate_comparison_pdf(
         contract_a_filename=latest_comparison["file_a"],
@@ -1458,14 +1618,21 @@ def download_comparison_report():
         comparison=latest_comparison["comparison"],
     )
 
-    return StreamingResponse(
-        pdf,
+    tmp_dir = r"C:\Users\Lenovo\AppData\Local\Temp\opencode"
+    with tempfile.NamedTemporaryFile(
+        delete=False,
+        suffix=".pdf",
+        dir=tmp_dir,
+    ) as tmp:
+        tmp.write(pdf.getvalue())
+        tmp_path = tmp.name
+
+    background_tasks.add_task(os.remove, tmp_path)
+
+    return FileResponse(
+        tmp_path,
         media_type="application/pdf",
-        headers={
-            "Content-Disposition": (
-                "attachment; filename=Comparison_Report.pdf"
-            )
-        },
+        filename="Comparison_Report.pdf",
     )
 
 
