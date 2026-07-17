@@ -34,7 +34,9 @@ The project combines rule-based legal analysis with a locally running Large Lang
 
 ✅ Local PDF contract analysis 
 
-✅ Local DOCX contract analysis
+✅ Local DOCX contract analysis 
+
+✅ Compare two legal contracts side by side
 
 ✅ Automatic clause detection
 
@@ -207,6 +209,24 @@ Upload a DOCX contract and receive:
 - Risk scores
 - Professional PDF report
 
+---
+
+## Compare Contracts
+
+```
+POST /compare-contracts
+```
+
+Upload two PDF or DOCX contracts and receive:
+
+- Side-by-side clause comparison
+- Risk score comparison
+- GDPR comparison
+- EU AI Act comparison
+- Comparison PDF report
+
+--- 
+
 # Example Workflow
 
 ```
@@ -265,12 +285,13 @@ No contract text is sent to external cloud AI services.
 
 Current Version:
 
-**v1.1 Stable**
+**v1.2 Stable**
 
 Implemented:
 
 - PDF Upload
-- DOCX Upload
+- DOCX Upload 
+- Contract Comparison
 - Local Llama 3 Integration
 - Clause Detection
 - GDPR Analysis
@@ -280,7 +301,6 @@ Implemented:
 
 Planned Features:
 
-- Compare Two Contracts 
 - Risk Dashboard
 - Docker Support
 - Unit Tests
@@ -289,9 +309,9 @@ Planned Features:
 
 ---
 
-# License
+# License 
 
-This project is intended for educational and research purposes.
+This project is intended for educational and research purposes. 
 
 The generated reports are compliance-readiness assessments and do not constitute legal advice.
 
