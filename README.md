@@ -5,19 +5,19 @@
 
 ![License](https://img.shields.io/badge/License-Educational-lightgrey)
 
-![Status](https://img.shields.io/badge/Status-v1.0_Stable-success)
+![Status](https://img.shields.io/badge/Status-v1.2_Stable-success)
 
-![Local LLM](https://img.shields.io/badge/LLM-Llama3-orange) 
+![LLM](https://img.shields.io/badge/LLM-Ollama%20%2B%20Llama%203-orange) 
 
 A privacy-first AI-powered legal contract analyzer that detects legal clauses, evaluates GDPR and EU AI Act compliance, calculates risk scores, and generates professional compliance reports — all running locally.
 
 ## Highlights
 
 - Privacy-first architecture
-- Local Llama 3 integration
+- Local LLM integration (Ollama + Llama 3)
 - GDPR readiness assessment
 - EU AI Act compliance assessment
-- Professional PDF compliance reports
+- Professional PDF analysis and comparison reports
 - FastAPI REST API 
 
 ---
@@ -32,9 +32,9 @@ The project combines rule-based legal analysis with a locally running Large Lang
 
 # Key Features
 
-✅ Local PDF contract analysis 
+✅ Local PDF contract analysis
 
-✅ Local DOCX contract analysis 
+✅ Local DOCX contract analysis
 
 ✅ Compare two legal contracts side by side
 
@@ -55,11 +55,11 @@ The project combines rule-based legal analysis with a locally running Large Lang
 
 ✅ Professional PDF report generation
 
+✅ Professional Contract Comparison PDF report
+
 ✅ Optional LLM-powered legal summary
 
 ✅ Privacy-first architecture
-
-No contract data is transmitted to external AI providers.
 
 ---
 
@@ -67,9 +67,9 @@ No contract data is transmitted to external AI providers.
 
 The project exposes a REST API built with FastAPI.
 
-### Swagger UI
+### Swagger UI (v1.2)
 
-![Swagger UI](images/swagger.png)
+![Swagger UI](images/swagger-v12.png)
 
 ---
 
@@ -79,7 +79,39 @@ Below is an example of the automatically generated PDF compliance report.
 
 ![PDF Report](images/pdf-report.png) 
 
---- 
+---
+
+# Contract Comparison
+
+Compare two legal contracts side by side and receive a structured compliance comparison report.
+
+### Features
+
+- Clause comparison
+- Overall risk score comparison
+- GDPR readiness comparison
+- EU AI Act readiness comparison
+- Professional PDF comparison report
+
+### Comparison Endpoint
+
+Upload two PDF or DOCX contracts for automated comparison.
+
+![Compare Endpoint](images/compare-endpoint.png)
+
+### JSON Response
+
+Structured JSON response including clause analysis, compliance assessment and risk score comparison.
+
+![Comparison JSON](images/comparison-json.png)
+
+### Comparison PDF Report
+
+Automatically generated professional comparison report.
+
+![Comparison Report](images/comparison-report.png)
+
+---
 
 # Architecture
 
@@ -126,11 +158,15 @@ Below is an example of the automatically generated PDF compliance report.
 
 ```
 Legal-Clause-Analyzer/
-
 │
 ├── images/
+│   ├── compare-endpoint.png
+│   ├── comparison-json.png
+│   ├── comparison-report.png
 │   ├── pdf-report.png
-│   └── swagger.png
+│   ├── swagger-v12.png
+│   └── swagger.png 
+│
 ├── main.py
 ├── requirements.txt
 ├── README.md
@@ -227,6 +263,16 @@ Upload two PDF or DOCX contracts and receive:
 
 --- 
 
+## Download Comparison Report
+
+```
+GET /download-comparison-report
+```
+
+Download the latest generated comparison PDF report. 
+
+--- 
+
 # Example Workflow
 
 ```
@@ -292,12 +338,13 @@ Implemented:
 - PDF Upload
 - DOCX Upload 
 - Contract Comparison
-- Local Llama 3 Integration
+- Local LLM Integration (Ollama + Llama 3) 
 - Clause Detection
 - GDPR Analysis
 - EU AI Act Analysis
 - Risk Scoring
-- Professional PDF Export
+- Professional PDF Report 
+- Professional Contract Comparison PDF Report
 
 Planned Features:
 
@@ -323,5 +370,4 @@ Developed by Soheil
 
 Legal Technology • AI Compliance • FastAPI • Local LLMs 
 
-GitHub:
-https://github.com/soheilon21-a11y 
+Repository: https://github.com/soheilon21-a11y/Legal-Clause-Analyzer 
