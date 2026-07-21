@@ -1,0 +1,31 @@
+# Version control
+.git/
+.gitignore
+
+# CI
+.github/
+
+# Python caches and test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Tests and development tooling (not needed in the image)
+tests/
+pytest.ini
+requirements-dev.txt
+
+# Documentation and screenshots
+README.md
+images/
+
+# Docker files themselves
+Dockerfile
+.dockerignore
+
+# Local environments and editor files
+.venv/
+venv/
+.env
+.vscode/
+.idea/
