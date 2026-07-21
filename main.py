@@ -524,6 +524,41 @@ def gdpr_privacy_check(text: str) -> dict[str, Any]:
     }
 
 
+def _build_rag_context(contract_text: str) -> str:
+    """Return retrieved legal references formatted for the LLM prompt.
+
+    Returns an empty string when retrieval fails for any reason or
+    finds no chunks, so the LLM path always falls back to the
+    original prompt.
+    """
+
+    try:
+        # Imported lazily so the heavy RAG dependencies load only on
+        # the LLM path and can never break application startup.
+        from rag.retriever import retrieve
+
+        chunks = retrieve(contract_text[:2000], top_k=3)
+    except Exception:
+        return ""
+
+    if not chunks:
+        return ""
+
+    references = "\n\n".join(
+        (
+            f"[Reference {index} - {chunk['filename']}, "
+            f"chunk {chunk['chunk_index']}]\n{chunk['text']}"
+        )
+        for index, chunk in enumerate(chunks, start=1)
+    )
+
+    return (
+        "Retrieved Legal References\n\n"
+        f"{references}\n\n"
+        "-------------------------\n\n"
+    )
+
+
 def generate_llm_summary(
     text: str,
     findings: list[dict[str, Any]],
@@ -594,6 +629,10 @@ Contract Excerpt
 
 {text[:6000]}
 """
+
+    # Prepend retrieved legal references when available. An empty
+    # string leaves the original prompt unchanged.
+    prompt = _build_rag_context(text) + prompt
 
     try:
         completion = client.chat.completions.create(
