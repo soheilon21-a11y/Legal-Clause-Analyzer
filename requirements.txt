@@ -6,3 +6,5 @@ PyMuPDF
 reportlab
 python-docx
 python-multipart
+chromadb
+sentence-transformers

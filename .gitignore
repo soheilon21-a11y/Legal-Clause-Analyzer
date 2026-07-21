@@ -33,3 +33,4 @@ dist/
 
 # Bytecode
 *.pyc 
+vector_store/
