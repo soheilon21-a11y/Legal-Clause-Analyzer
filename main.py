@@ -524,25 +524,26 @@ def gdpr_privacy_check(text: str) -> dict[str, Any]:
     }
 
 
-def _build_rag_context(contract_text: str) -> str:
-    """Return retrieved legal references formatted for the LLM prompt.
+def _build_rag_context(
+    contract_text: str,
+) -> tuple[str, list[dict]]:
+    """Return (formatted_context, references_list).
 
-    Returns an empty string when retrieval fails for any reason or
-    finds no chunks, so the LLM path always falls back to the
-    original prompt.
+    ``formatted_context`` is the retrieved references formatted for the
+    LLM prompt (empty string when no chunks are available).
+    ``references_list`` is a list of ``{"filename": ..., "chunk_index": ...}``
+    dicts for the PDF report (empty list when no chunks are available).
     """
 
     try:
-        # Imported lazily so the heavy RAG dependencies load only on
-        # the LLM path and can never break application startup.
         from rag.retriever import retrieve
 
         chunks = retrieve(contract_text[:2000], top_k=3)
     except Exception:
-        return ""
+        return ("", [])
 
     if not chunks:
-        return ""
+        return ("", [])
 
     references = "\n\n".join(
         (
@@ -552,11 +553,18 @@ def _build_rag_context(contract_text: str) -> str:
         for index, chunk in enumerate(chunks, start=1)
     )
 
-    return (
+    context = (
         "Retrieved Legal References\n\n"
         f"{references}\n\n"
         "-------------------------\n\n"
     )
+
+    ref_list = [
+        {"filename": chunk["filename"], "chunk_index": chunk["chunk_index"]}
+        for chunk in chunks
+    ]
+
+    return (context, ref_list)
 
 
 def generate_llm_summary(
@@ -564,7 +572,7 @@ def generate_llm_summary(
     findings: list[dict[str, Any]],
     ai_act_check: dict[str, Any],
     gdpr_check: dict[str, Any],
-) -> str:
+) -> tuple[str, list[dict]]:
     prompt = f"""
 You are an AI LegalTech Assistant specialized in:
 
@@ -630,9 +638,8 @@ Contract Excerpt
 {text[:6000]}
 """
 
-    # Prepend retrieved legal references when available. An empty
-    # string leaves the original prompt unchanged.
-    prompt = _build_rag_context(text) + prompt
+    rag_context, rag_references = _build_rag_context(text)
+    prompt = rag_context + prompt
 
     try:
         completion = client.chat.completions.create(
@@ -656,12 +663,13 @@ Contract Excerpt
         )
 
         content = completion.choices[0].message.content
-        return content or "Local LLM returned an empty response."
+        return (content or "Local LLM returned an empty response.", rag_references)
 
     except Exception as exc:
         return (
             "Local LLM summary unavailable. "
-            f"Reason: {exc.__class__.__name__}: {exc}"
+            f"Reason: {exc.__class__.__name__}: {exc}",
+            rag_references,
         )
 
 
@@ -716,9 +724,10 @@ def run_full_analysis(
     )
 
     llm_summary = None
+    rag_references: list[dict] = []
 
     if use_llm:
-        llm_summary = generate_llm_summary(
+        llm_summary, rag_references = generate_llm_summary(
             contract_text,
             findings,
             ai_act_check,
@@ -731,6 +740,7 @@ def run_full_analysis(
         "ai_act_check": ai_act_check,
         "gdpr_check": gdpr_check,
         "llm_summary": llm_summary,
+        "rag_references": rag_references,
     }
 
 
@@ -806,6 +816,7 @@ async def analyze_pdf(
         "ai_act_check": result["ai_act_check"],
         "gdpr_check": result["gdpr_check"],
         "llm_summary": result["llm_summary"],
+        "rag_references": result["rag_references"],
     }
 
 
@@ -851,6 +862,7 @@ async def analyze_docx(
         "ai_act_check": result["ai_act_check"],
         "gdpr_check": result["gdpr_check"],
         "llm_summary": result["llm_summary"],
+        "rag_references": result["rag_references"],
     }
 
     return {
@@ -1681,6 +1693,7 @@ def generate_pdf_report(
     ai_act_check,
     gdpr_check,
     llm_summary,
+    rag_references: list[dict] | None = None,
 ) -> BytesIO:
 
     buffer = BytesIO()
@@ -1929,8 +1942,22 @@ def generate_pdf_report(
                 styles["BodyText"],
             )
         )
-    
-    
+
+    if rag_references:
+        story.append(
+            Paragraph(
+                "<br/><b>Referenced Legal Sources</b>",
+                styles["Heading2"],
+            )
+        )
+        for ref in rag_references:
+            story.append(
+                Paragraph(
+                    f"• {ref['filename']} — chunk {ref['chunk_index']}",
+                    styles["BodyText"],
+                )
+            )
+
     document.build(story)
     buffer.seek(0)
     return buffer
@@ -1951,6 +1978,7 @@ def download_report():
     ai_act_check = latest_analysis["ai_act_check"]
     gdpr_check = latest_analysis["gdpr_check"]
     llm_summary = latest_analysis["llm_summary"]
+    rag_references = latest_analysis.get("rag_references", [])
 
     pdf = generate_pdf_report(
         findings,
@@ -1958,6 +1986,7 @@ def download_report():
         ai_act_check,
         gdpr_check,
         llm_summary,
+        rag_references,
     )
 
     return StreamingResponse(
