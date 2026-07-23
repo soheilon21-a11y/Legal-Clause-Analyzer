@@ -20,12 +20,12 @@ from reportlab.lib.units import inch
 from io import BytesIO
 
 
-LOCAL_LLM_BASE_URL = "http://127.0.0.1:11434/v1"
-MODEL_ID = "llama3"
+LOCAL_LLM_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434/v1")
+MODEL_ID = os.environ.get("LLM_MODEL", "llama3")
 
 client = OpenAI(
     base_url=LOCAL_LLM_BASE_URL,
-    api_key="ollama",
+    api_key=os.environ.get("OLLAMA_API_KEY", "ollama"),
 )
 
 app = FastAPI(
