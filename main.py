@@ -345,6 +345,77 @@ GDPR_CONTROL_CHECKS: dict[str, list[str]] = {
 }
 
 
+# ── Prompt Templates ──────────────────────────────────────────────────────────
+
+SYSTEM_INSTRUCTIONS = (
+    "You are a cautious legal technology assistant. "
+    "You explain risks clearly and avoid legal advice."
+)
+
+ANALYSIS_INSTRUCTIONS = """You are an AI LegalTech Assistant specialized in:
+
+- GDPR compliance
+- EU AI Act compliance
+- AI Governance
+- Commercial contract review
+
+This is NOT legal advice.
+
+Based ONLY on the supplied analysis, generate a professional compliance report."""
+
+OUTPUT_FORMAT_INSTRUCTIONS = """Use EXACTLY the following structure:
+
+# Executive Summary
+
+# Overall Risk Level
+
+# GDPR Readiness
+
+# EU AI Act Readiness
+
+# Key Legal Risks
+
+# Missing Compliance Controls
+
+# Priority Recommendations
+(List only the five most important recommendations.)
+
+# Conclusion
+
+# Disclaimer
+State clearly that this is a compliance-readiness assessment and not legal advice.
+
+Do not repeat the contract.
+
+Do not invent facts.
+
+Use only the supplied findings."""
+
+CONTRACT_TEXT_SECTION = """-------------------------
+
+Clause Findings
+
+{findings}
+
+-------------------------
+
+EU AI Act Analysis
+
+{ai_act_check}
+
+-------------------------
+
+GDPR Analysis
+
+{gdpr_check}
+
+-------------------------
+
+Contract Excerpt
+
+{contract_text}"""
+
+
 def match_keywords(text: str, keywords: list[str]) -> list[str]:
     return [keyword for keyword in keywords if keyword in text]
 
@@ -577,89 +648,28 @@ def generate_llm_summary(
     ai_act_check: dict[str, Any],
     gdpr_check: dict[str, Any],
 ) -> tuple[str, list[dict]]:
-    prompt = f"""
-You are an AI LegalTech Assistant specialized in:
-
-- GDPR compliance
-- EU AI Act compliance
-- AI Governance
-- Commercial contract review
-
-This is NOT legal advice.
-
-Based ONLY on the supplied analysis, generate a professional compliance report.
-
-Use EXACTLY the following structure:
-
-# Executive Summary
-
-# Overall Risk Level
-
-# GDPR Readiness
-
-# EU AI Act Readiness
-
-# Key Legal Risks
-
-# Missing Compliance Controls
-
-# Priority Recommendations
-(List only the five most important recommendations.)
-
-# Conclusion
-
-# Disclaimer
-State clearly that this is a compliance-readiness assessment and not legal advice.
-
-Do not repeat the contract.
-
-Do not invent facts.
-
-Use only the supplied findings.
-
--------------------------
-
-Clause Findings
-
-{findings}
-
--------------------------
-
-EU AI Act Analysis
-
-{ai_act_check}
-
--------------------------
-
-GDPR Analysis
-
-{gdpr_check}
-
--------------------------
-
-Contract Excerpt
-
-{text[:6000]}
-"""
+    user_prompt = (
+        ANALYSIS_INSTRUCTIONS
+        + "\n\n"
+        + OUTPUT_FORMAT_INSTRUCTIONS
+        + "\n\n"
+        + CONTRACT_TEXT_SECTION.format(
+            findings=findings,
+            ai_act_check=ai_act_check,
+            gdpr_check=gdpr_check,
+            contract_text=text[:6000],
+        )
+    )
 
     rag_context, rag_references = _build_rag_context(text)
-    prompt = rag_context + prompt
+    full_prompt = rag_context + user_prompt
 
     try:
         completion = client.chat.completions.create(
             model=MODEL_ID,
             messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are a cautious legal technology assistant. "
-                        "You explain risks clearly and avoid legal advice."
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": prompt,
-                },
+                {"role": "system", "content": SYSTEM_INSTRUCTIONS},
+                {"role": "user", "content": full_prompt},
             ],
             temperature=0.1,
             top_p=0.9,
