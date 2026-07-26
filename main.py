@@ -560,7 +560,11 @@ def _build_rag_context(
     )
 
     ref_list = [
-        {"filename": chunk["filename"], "chunk_index": chunk["chunk_index"]}
+        {
+            "filename": chunk["filename"],
+            "chunk_index": chunk["chunk_index"],
+            "text": chunk["text"][:300],
+        }
         for chunk in chunks
     ]
 
@@ -1950,10 +1954,31 @@ def generate_pdf_report(
                 styles["Heading2"],
             )
         )
-        for ref in rag_references:
+        for idx, ref in enumerate(rag_references, start=1):
+            title = " ".join(
+                word.capitalize()
+                for word in ref["filename"]
+                .replace(".txt", "")
+                .replace("_", " ")
+                .split()
+            )
+            ex = ref.get("text", "")
+            excerpt = ex[:200] + "..." if len(ex) > 200 else ex
             story.append(
                 Paragraph(
-                    f"• {ref['filename']} — chunk {ref['chunk_index']}",
+                    f"<b>{idx}. {title}</b>",
+                    styles["BodyText"],
+                )
+            )
+            story.append(
+                Paragraph(
+                    f"Source: {ref['filename']}",
+                    styles["BodyText"],
+                )
+            )
+            story.append(
+                Paragraph(
+                    f"Excerpt: {excerpt}",
                     styles["BodyText"],
                 )
             )
