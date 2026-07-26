@@ -361,35 +361,40 @@ ANALYSIS_INSTRUCTIONS = """You are an AI LegalTech Assistant specialized in:
 
 This is NOT legal advice.
 
-Based ONLY on the supplied analysis, generate a professional compliance report."""
+You will receive a contract analysis followed by optional legal references.
+If legal references are provided above the analysis, use them naturally
+to support your findings. Do not mention the retrieval mechanism.
 
-OUTPUT_FORMAT_INSTRUCTIONS = """Use EXACTLY the following structure:
+Generate a concise, professional compliance report based ONLY on the
+supplied analysis. Keep the report brief and avoid repetition."""
+
+OUTPUT_FORMAT_INSTRUCTIONS = """Structure the report as follows:
 
 # Executive Summary
+One paragraph synthesizing the overall risk posture.
 
-# Overall Risk Level
+# Key Legal Findings
+List each detected clause type with its risk level and a one-sentence
+explanation. Group related findings.
 
-# GDPR Readiness
+# GDPR Assessment
+Summarize personal data concerns, missing controls, and key
+recommendations. Reference relevant legal sources if available.
 
-# EU AI Act Readiness
+# EU AI Act Assessment
+Summarize AI Act applicability, high-risk indicators, missing
+controls, and key recommendations. Reference relevant legal sources
+if available.
 
-# Key Legal Risks
+# Overall Risk Evaluation
+A short paragraph interpreting the risk scores in plain language.
 
-# Missing Compliance Controls
+# Practical Recommendations
+List the most important actionable items. Keep each to one sentence.
 
-# Priority Recommendations
-(List only the five most important recommendations.)
-
-# Conclusion
-
-# Disclaimer
-State clearly that this is a compliance-readiness assessment and not legal advice.
-
-Do not repeat the contract.
-
-Do not invent facts.
-
-Use only the supplied findings."""
+Do not invent facts. Use only the supplied findings. Do not repeat
+the contract text verbatim. End with a clear disclaimer that this is
+a compliance-readiness assessment and not legal advice."""
 
 CONTRACT_TEXT_SECTION = """-------------------------
 
