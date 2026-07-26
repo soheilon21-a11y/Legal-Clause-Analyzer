@@ -1,0 +1,46 @@
+Force Majeure Clause Reference
+
+A force majeure clause excuses a party from performing its contractual
+obligations when an extraordinary event beyond its control prevents
+performance. These clauses are common in commercial contracts and have received
+increased attention following global disruptions.
+
+Definition and scope: Force majeure typically covers events such as natural
+disasters, war, terrorism, pandemics, government actions, strikes, and
+supplier failures. Some clauses specifically list covered events while others
+use a general definition. The broader the definition, the more likely a party
+can successfully invoke the clause. Narrowly tailored lists limit protection to
+only those events explicitly named.
+
+Legal standards: Most jurisdictions require that the event be unforeseeable at
+the time of contracting, unavoidable despite reasonable precautions, and
+external to the affected party. The burden of proof rests on the party invoking
+the clause. Common law systems tend to interpret force majeure clauses strictly
+while civil law systems may have statutory force majeure concepts that apply
+even without an express clause.
+
+Notice requirements: Force majeure clauses usually require the affected party
+to provide prompt written notice to the other party. Notice deadlines vary from
+immediately to within a specified number of days. Failure to provide timely
+notice may waive the right to claim force majeure.
+
+Effects on obligations: During a force majeure event, the affected party is
+typically excused from performance for the duration of the event. Some clauses
+suspend all obligations while others only suspend the affected obligations. The
+non-affected party may be entitled to suspend its own counter-performance.
+
+Mitigation obligations: Many clauses require the affected party to take
+reasonable steps to mitigate the impact of the force majeure event and resume
+performance as soon as possible. Failure to mitigate may limit the scope of
+the excuse.
+
+Duration and termination: If the force majeure event continues beyond a
+specified period, either party may usually terminate the contract. Termination
+rights may be mutual or unilateral. Post-termination obligations such as return
+of confidential information and payment for work completed should still apply.
+
+Commercial considerations: Parties should negotiate the list of force majeure
+events carefully. Supply chain disruptions and pandemic-related events should
+be explicitly addressed. Exclusion of certain events such as supplier failure
+or economic hardship may shift risk significantly. Insurance coverage should be
+considered alongside force majeure provisions.

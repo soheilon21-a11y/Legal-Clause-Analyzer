@@ -1,0 +1,54 @@
+Confidentiality Clause Reference
+
+Confidentiality clauses, also known as non-disclosure provisions, protect
+sensitive information exchanged between parties during the course of a
+contractual relationship. These clauses are essential for safeguarding trade
+secrets, business strategies, customer data, and other proprietary information.
+
+Definition of confidential information: The clause must clearly define what
+constitutes confidential information. Common approaches include blanket
+definitions covering all information disclosed, specific enumerated categories,
+or a combination requiring written marking or oral designation. Best practice
+is to define information by its nature and the circumstances of disclosure
+rather than relying solely on marking requirements.
+
+Exclusions: Standard exclusions cover information that is or becomes publicly
+known through no fault of the receiving party, already known by the receiving
+party prior to disclosure, independently developed without use of confidential
+information, or required to be disclosed by law or court order. Permitted
+disclosures should also include disclosure to employees, agents, and advisors
+who need to know on a need-to-know basis.
+
+Obligations of the receiving party: The receiving party must maintain
+confidential information in strict confidence, use it only for the permitted
+purpose, restrict access to authorized personnel, and return or destroy
+confidential information upon termination. Reasonable care obligations should
+not be less than the standard used for the receiving party's own confidential
+information.
+
+Duration: Confidentiality obligations may survive termination of the main
+agreement. Trade secret protection typically lasts as long as the information
+remains a trade secret. Non-trade secret information may have a fixed
+post-termination period such as two to five years. The duration should be
+commercially reasonable and enforceable under applicable law.
+
+Security measures: The clause should require reasonable security measures to
+protect confidential information from unauthorized access, disclosure, or
+breach. This may include encryption, access controls, secure storage, and
+incident notification procedures. Data protection obligations under GDPR may
+impose additional requirements.
+
+Remedies: Breach of confidentiality can cause irreparable harm. The clause
+should acknowledge that monetary damages may be inadequate and that injunctive
+relief is appropriate. Some clauses include liquidated damages for specific
+breaches.
+
+Compelled disclosure: If the receiving party is legally required to disclose
+confidential information, it must notify the disclosing party promptly,
+cooperate in seeking a protective order, and disclose only the minimum
+information required.
+
+In contract review, verify that confidentiality clauses are mutual or
+one-sided as appropriate, that the definition of confidential information
+covers the specific categories of data being shared, that exclusions are not
+overly broad, and that post-termination obligations are clearly stated.

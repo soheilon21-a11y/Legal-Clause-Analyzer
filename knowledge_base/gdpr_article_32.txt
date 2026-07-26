@@ -1,0 +1,44 @@
+GDPR Article 32: Security of Processing
+
+Article 32 of the General Data Protection Regulation (GDPR) requires both
+controllers and processors to implement appropriate technical and
+organizational measures to ensure a level of security appropriate to the risk
+associated with the processing of personal data. This article is central to the
+GDPR integrity and confidentiality principle under Article 5(1)(f).
+
+The measures required under Article 32 must account for the state of the art,
+the costs of implementation, the nature, scope, context, and purposes of
+processing, and the varying likelihood and severity of risks to the rights and
+freedoms of natural persons. This risk-based approach means that higher-risk
+processing activities require more robust security controls.
+
+Article 32(1) lists specific measures that controllers and processors should
+evaluate and implement as appropriate: the pseudonymization and encryption of
+personal data; the ability to ensure the ongoing confidentiality, integrity,
+availability, and resilience of processing systems and services; the ability to
+restore the availability of and access to personal data in a timely manner in
+the event of a physical or technical incident; and a process for regularly
+testing, assessing, and evaluating the effectiveness of technical and
+organizational measures for ensuring the security of the processing.
+
+Under Article 32(2), the controller and processor must take steps to ensure
+that any natural person acting under their authority who has access to personal
+data does not process that data except on instructions from the controller.
+This requires contractual safeguards, access controls, and staff training.
+
+Article 32(3) clarifies that adherence to an approved code of conduct or an
+approved certification mechanism may be used as an element to demonstrate
+compliance with Article 32 security requirements.
+
+Article 32(4) imposes a specific obligation on the processor: the processor
+must notify the controller without undue delay after becoming aware of a
+personal data breach. This notification obligation is distinct from the breach
+notification obligations under Articles 33 and 34.
+
+When reviewing contracts, data processing agreements must include clear
+allocations of security responsibilities between controller and processor. The
+processor should be contractually obligated to implement Article 32 measures,
+to assist the controller in compliance with security obligations, and to notify
+the controller of breaches. Security measures, subcontracting conditions,
+audit rights, and incident response procedures should all be addressed in the
+contractual terms governing the processing relationship.

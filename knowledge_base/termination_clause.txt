@@ -1,0 +1,50 @@
+Termination Clause Reference
+
+Termination clauses define the circumstances and procedures under which a
+contract may be ended before the completion of its full term. These clauses are
+critical for managing risk and providing exit mechanisms when contractual
+relationships break down.
+
+Termination for cause: Also known as termination for breach, this allows a
+party to terminate if the other party commits a material breach. Most clauses
+require the Breaching Party to receive a cure period, typically 15 to 60 days
+after written notice, to remedy the breach. If the breach continues beyond the
+cure period, the non-breaching party may terminate. The clause should define
+what constitutes a material breach, including failure to pay, failure to
+perform core obligations, breach of confidentiality, and breach of data
+protection obligations. Incurable breaches may justify immediate termination
+without a cure period.
+
+Termination for convenience: This allows a party to terminate the contract
+without cause by providing advance notice, typically 30 to 90 days. Termination
+for convenience provides flexibility but can disadvantage a party that has made
+investments in the relationship. Some contracts limit termination for
+convenience to specific phases or require payment of termination costs.
+
+Termination for insolvency: Most contracts permit termination if the other
+party becomes insolvent, files for bankruptcy, makes an assignment for the
+benefit of creditors, or has a receiver appointed. These provisions protect
+against the risk of non-performance due to financial distress.
+
+Notice requirements: Termination must be effected by written notice specifying
+the grounds for termination. The notice period, delivery method, and any cure
+rights must comply with the contractual requirements. Electronic delivery is
+often acceptable if the contract does not specify a particular method.
+
+Post-termination obligations: After termination, the parties must fulfill
+outstanding obligations. Common post-termination duties include payment of fees
+accrued before termination, return or destruction of confidential information,
+cooperation on transition, and completion of in-progress work where
+practicable. Survival clauses specify which provisions continue after
+termination, typically confidentiality, limitation of liability,
+indemnification, and dispute resolution.
+
+Effects of termination: Termination discharges future performance obligations
+but does not affect rights and obligations that accrued before termination.
+The contract should clarify whether termination is without prejudice to
+remedies for prior breach.
+
+In contract review, assess whether cure periods are commercially reasonable,
+whether termination for convenience is mutual or one-sided, whether
+post-termination obligations are clearly defined, and whether the survival
+clause covers all necessary provisions.

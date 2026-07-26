@@ -1,0 +1,41 @@
+EU AI Act: Human Oversight
+
+Human oversight is a cornerstone of the EU Artificial Intelligence Act. The
+Regulation requires that high-risk AI systems be designed and developed so that
+natural persons can effectively oversee their operation. This ensures that AI
+systems do not undermine human autonomy and that decisions with significant
+impact on individuals remain subject to human judgment.
+
+Article 14 of the EU AI Act establishes the human oversight requirement.
+Providers must identify and implement appropriate oversight measures before
+placing systems on the market. The oversight measures must be built into the
+system by design or, where this is not technically feasible, be implemented by
+the deployer using appropriate technical and procedural mechanisms.
+
+Human oversight measures must enable two core capabilities. First, the
+oversight person must be able to fully understand the system capabilities and
+limitations, including its intended purpose, expected behavior, potential
+biases, accuracy levels, and circumstances under which the system may produce
+erroneous or unreliable outputs. Second, the oversight person must be able to
+monitor the system during operation, detect anomalies and unexpected behavior,
+and intervene or override the system output when necessary.
+
+Three models of human oversight are recognized. Human-in-the-loop ensures that
+the system cannot take action without human intervention. Human-on-the-loop
+allows the system to operate autonomously but enables human supervision and
+intervention at any time. Human-in-command places overall control with a human
+who can decide which tasks to delegate and which to perform directly.
+
+The oversight person must have the necessary competence, training, and
+authority to exercise oversight effectively. They must not be subject to
+organizational pressures that could compromise their judgment. Deployers are
+responsible for assigning oversight responsibilities to qualified personnel and
+ensuring that oversight processes are documented and auditable.
+
+When reviewing contracts involving AI systems, verify that human oversight
+obligations are clearly defined. The contract should specify whether the
+provider or deployer is responsible for implementing oversight measures, what
+training and documentation will be provided, what override capabilities exist,
+and how oversight incidents are recorded and reported. Warranty and liability
+clauses should address failures in human oversight mechanisms. The absence of
+human oversight language may indicate non-compliance with the EU AI Act.

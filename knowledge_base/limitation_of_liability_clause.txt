@@ -1,0 +1,50 @@
+Limitation of Liability Clause Reference
+
+Limitation of liability clauses cap or exclude the monetary damages a party
+can recover for breach of contract or other specified claims. These are among
+the most heavily negotiated provisions in commercial agreements because they
+directly allocate risk between the parties.
+
+Types of limitations: Liability caps set a maximum monetary amount the
+liable party must pay. Common caps include a multiple of fees paid, a fixed
+amount, or a formula based on contract value. Exclusions of liability remove
+entire categories of damages, typically consequential, indirect, incidental,
+special, or punitive damages. Some clauses also exclude loss of profits, loss
+of business, loss of data, or loss of reputation.
+
+Unenforceable exclusions: Certain liability exclusions are unenforceable in
+most jurisdictions. These include liability for death or personal injury caused
+by negligence, fraud or fraudulent misrepresentation, gross negligence or willful
+misconduct, and breach of confidentiality or data protection obligations.
+Statutory consumer protection rights cannot be excluded.
+
+Standard carve-outs: Carve-outs preserve liability for specific categories even
+when general limitations apply. Common carve-outs include indemnification
+obligations, intellectual property infringement, breach of data protection
+obligations, breach of confidentiality, unauthorized use or disclosure, and
+payment obligations. The scope of carve-outs determines how much risk the
+liability cap actually covers.
+
+Exclusive remedy provisions: Limitation clauses often state that the specified
+remedies are the exclusive remedies available to the non-breaching party. This
+prevents the non-breaching party from seeking additional remedies outside the
+contract. Exclusive remedy clauses should be carefully evaluated in conjunction
+with liability caps.
+
+Mutuality: Limitation of liability clauses may be mutual or one-sided. Mutual
+limitations apply equally to both parties. One-sided limitations apply only to
+one party, typically the vendor or service provider. Courts may scrutinize
+one-sided limitations, especially where the parties have unequal bargaining
+power.
+
+Indemnification interaction: Liability caps may or may not apply to
+indemnification obligations. The contract should clearly state whether
+indemnification payments are subject to the general liability cap. If
+indemnification is carved out, the indemnifying party carries uncapped
+liability for indemnified claims.
+
+In contract review, examine the cap amount, the exclusions and carve-outs, and
+whether the limitations are mutual. Consider whether the cap is proportionate
+to the potential loss and whether the exclusions of consequential damages are
+appropriate given the nature of the contract. Verify that mandatory exceptions
+for death, personal injury, fraud, and gross negligence are preserved.

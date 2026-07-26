@@ -1,0 +1,51 @@
+GDPR Data Protection Principles Overview
+
+The General Data Protection Regulation (GDPR) is built on seven data protection
+principles codified in Article 5. These principles apply to any processing of
+personal data and serve as the interpretive framework for the entire
+Regulation. Understanding these principles is essential for drafting and
+reviewing data protection clauses in contracts.
+
+Lawfulness, fairness, and transparency: Processing must have a valid lawful
+basis. The six lawful bases are consent, contract performance, legal
+obligation, vital interests, public task, and legitimate interests. Fair
+processing means controllers cannot process data in ways that are detrimental
+or unexpected. Transparency requires clear communication about how data is
+collected, used, and shared.
+
+Purpose limitation: Data must be collected for specified, explicit, and
+legitimate purposes. Further processing for incompatible purposes is
+prohibited. Contracts should clearly define the purposes for which personal
+data is processed and restrict the processor from using data for any other
+purpose.
+
+Data minimization: Only personal data that is adequate, relevant, and limited
+to what is necessary for the stated purposes may be processed. Contracts should
+limit the categories of personal data transferred to the minimum required and
+prohibit excessive collection.
+
+Accuracy: Inaccurate personal data must be erased or rectified without delay.
+Processors should be required to assist controllers in keeping data accurate
+and up to date.
+
+Storage limitation: Personal data may be retained only as long as necessary for
+the processing purposes. Retention schedules should be defined in contracts
+and data should be deleted or anonymized once the retention period expires.
+
+Integrity and confidentiality: Appropriate security measures must protect
+personal data against unauthorized or unlawful processing and against
+accidental loss, destruction, or damage. Contracts must specify security
+obligations, encryption requirements, access controls, and breach notification
+procedures.
+
+Accountability: Controllers are responsible for demonstrating compliance with
+all principles. This requires documented policies, data protection impact
+assessments, records of processing activities, and potentially a Data
+Protection Officer. Contracts should include audit rights, reporting
+obligations, and indemnification for non-compliance.
+
+These principles influence every aspect of GDPR compliance. When reviewing
+contracts, identify which party acts as controller and which as processor, and
+verify that contractual terms allocate responsibilities for each principle.
+Standard contractual clauses, binding corporate rules, and data processing
+agreements should all align with the Article 5 principles.

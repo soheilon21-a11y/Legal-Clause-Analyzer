@@ -1,0 +1,46 @@
+GDPR Article 13: Information to Be Provided When Personal Data Are Collected
+from the Data Subject
+
+Article 13 of the General Data Protection Regulation (GDPR) specifies the
+information that controllers must provide to data subjects when personal data
+is collected directly from them. This transparency obligation applies at the
+time the data is obtained. The goal is to ensure that individuals have full
+visibility into how their personal data will be processed.
+
+Under Article 13(1), the controller must provide the following information at
+the time of collection: the identity and contact details of the controller and,
+where applicable, the controller's representative; the contact details of the
+Data Protection Officer; the purposes of the processing and the lawful basis
+for the processing; the legitimate interests pursued by the controller or a
+third party where the processing is based on legitimate interests; and the
+recipients or categories of recipients of the personal data, if any.
+
+Under Article 13(2), additional information must be provided to ensure fair and
+transparent processing. This includes: the period for which the personal data
+will be stored, or the criteria used to determine that period; the existence of
+the right to request access, rectification, erasure, restriction of processing,
+data portability, and the right to object to processing; the right to withdraw
+consent at any time where processing is based on consent; the right to lodge a
+complaint with a supervisory authority; whether providing personal data is a
+statutory or contractual requirement and the possible consequences of failing
+to provide the data; and the existence of automated decision-making including
+profiling, with meaningful information about the logic involved and the
+envisaged consequences.
+
+Where the controller intends to further process personal data for a purpose
+other than that for which it was collected, Article 13(3) requires the
+controller to provide the data subject with information about that other
+purpose and any relevant further information under Article 13(2) before that
+processing occurs.
+
+Article 13 information must be concise, transparent, intelligible, and easily
+accessible, using clear and plain language. This is especially important when
+addressing children. The information should be provided in writing, or by other
+appropriate means including electronic means. Oral provision is permitted only
+when the identity of the data subject is proven by other means.
+
+In contract review, privacy notices and data collection clauses should be
+verified against Article 13 requirements. Contracts involving data processing
+should allocate responsibility for providing Article 13 notices to the
+controller and should include provisions ensuring that all required information
+is delivered to data subjects in a timely and compliant manner.

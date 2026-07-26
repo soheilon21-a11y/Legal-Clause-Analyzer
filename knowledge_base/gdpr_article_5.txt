@@ -1,0 +1,51 @@
+GDPR Article 5: Principles Relating to Processing of Personal Data
+
+Article 5 of the General Data Protection Regulation (GDPR) establishes the
+seven core principles that govern all processing of personal data. These
+principles form the foundation of European data protection law and apply to
+every controller and processor handling personal data of individuals within the
+European Union.
+
+The first principle is lawfulness, fairness, and transparency. Personal data
+must be processed lawfully, meaning the controller must have a valid lawful
+basis such as consent, contractual necessity, legal obligation, vital
+interests, public interest, or legitimate interests. Processing must be fair
+and not detrimental to the data subject. Transparency requires that data
+subjects be informed about how their data is collected, used, and shared in a
+clear and accessible manner.
+
+The second principle is purpose limitation. Personal data may only be collected
+for specified, explicit, and legitimate purposes. Further processing that is
+incompatible with the original purposes is prohibited. Archiving in the public
+interest, scientific or historical research, and statistical purposes are not
+considered incompatible provided appropriate safeguards exist.
+
+The third principle is data minimization. Controllers must ensure that
+processed personal data is adequate, relevant, and limited to what is necessary
+for the purposes for which it is processed. This principle discourages
+collecting data on the assumption it might become useful later.
+
+The fourth principle is accuracy. Controllers must take every reasonable step
+to ensure that inaccurate personal data is erased or rectified without delay.
+Data quality processes and regular reviews are essential for compliance.
+
+The fifth principle is storage limitation. Personal data may be kept only for
+as long as necessary for the processing purposes. Retention periods must be
+defined and justified. After the retention period ends, data must be deleted or
+anonymized.
+
+The sixth principle is integrity and confidentiality. Personal data must be
+processed in a manner that ensures appropriate security, including protection
+against unauthorized or unlawful processing and against accidental loss,
+destruction, or damage, using appropriate technical or organizational measures.
+
+The seventh principle is accountability. The controller is responsible for and
+must be able to demonstrate compliance with all of the above principles.
+Accountability requires documented policies, data protection impact
+assessments, records of processing activities, and, where applicable,
+appointment of a Data Protection Officer.
+
+When reviewing contracts for GDPR compliance, assess whether obligations
+relating to each of these principles are clearly allocated between the
+controller and the processor. Data processing agreements should explicitly
+reference Article 5 principles and define how each party will uphold them.

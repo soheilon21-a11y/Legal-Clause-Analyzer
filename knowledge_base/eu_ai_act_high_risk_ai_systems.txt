@@ -1,0 +1,52 @@
+EU AI Act: High-Risk AI Systems
+
+The European Union Artificial Intelligence Act (EU AI Act) classifies AI
+systems into risk categories. High-risk AI systems are subject to the most
+stringent regulatory obligations. Understanding the classification criteria and
+compliance requirements is essential for reviewing contracts involving AI.
+
+An AI system is classified as high-risk under two main categories. First,
+systems that are safety components of products or fall under EU harmonization
+legislation requiring third-party conformity assessment. Second, stand-alone AI
+systems in specific high-risk use cases: biometric identification and
+categorization of natural persons; management and operation of critical
+infrastructure; education and vocational training; employment, worker
+management, and access to self-employment; access to essential private and
+public services including credit scoring; law enforcement; migration, asylum,
+and border control management; and administration of justice and democratic
+processes.
+
+Providers of high-risk AI systems must implement a risk management system
+throughout the system lifecycle. This includes identifying and analyzing known
+and foreseeable risks, evaluating the acceptability of residual risks, and
+implementing risk management measures. The risk management process must be
+documented and continuously updated.
+
+Data governance obligations require that training, validation, and testing
+datasets are relevant, representative, and free from errors to the extent
+possible. Appropriate data governance practices must address dataset design
+choices, bias detection and mitigation, and data adequacy assessments.
+
+Technical documentation must be prepared before market placement and kept up to
+date. It must include a general description of the system, detailed design
+information, development methodology, and results of conformity assessment
+procedures. Transparency and provision of information obligations require that
+deployers understand the capabilities and limitations of the system.
+
+Human oversight measures must enable deployers to effectively monitor the
+system, understand its outputs, and override or stop the system when
+necessary. Accuracy, robustness, and cybersecurity requirements demand that
+high-risk systems achieve appropriate performance levels and are resilient
+against errors and attacks.
+
+Record-keeping and logging capabilities must be built into the system to enable
+traceability and post-market monitoring. Providers must establish a post-market
+monitoring system and report serious incidents to national competent
+authorities.
+
+In contract review, identify whether the contract involves the provision or
+deployment of an AI system that could qualify as high-risk. Contracts should
+allocate responsibility for risk management, data governance, human oversight,
+and documentation obligations between provider and deployer. Warranty clauses
+should address compliance with the EU AI Act technical and organizational
+requirements.
