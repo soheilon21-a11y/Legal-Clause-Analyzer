@@ -328,7 +328,8 @@ The generated reports are compliance-readiness assessments and **do not constitu
 
 ## Author
 
-Developed by **Soheil**
+Developed by Soheil Onsori
+Legal Technology & AI
 
 Legal Technology • AI Compliance • FastAPI • Local LLMs • RAG
 
