@@ -330,8 +330,7 @@ The generated reports are compliance-readiness assessments and **do not constitu
 
 Developed by Soheil Onsori
 
-Legal Technology & AI
+Legal Technology • AI Compliance • FastAPI • Local LLMs • Retrieval-Augmented Generation (RAG)
 
-Legal Technology • AI Compliance • FastAPI • Local LLMs • RAG
-
-Repository: https://github.com/soheilon21-a11y/Legal-Clause-Analyzer
+GitHub Repository:
+https://github.com/soheilon21-a11y/Legal-Clause-Analyzer
