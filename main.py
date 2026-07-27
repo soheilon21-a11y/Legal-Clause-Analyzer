@@ -37,7 +37,7 @@ MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
 
 app = FastAPI(
     title="Legal Clause Analyzer",
-    version="1.2",
+    version="1.0",
     description=(
         "Privacy-first legal clause analyzer with local LLM support. "
         "Supports PDF, DOCX and Contract Comparison reports."
@@ -2078,7 +2078,19 @@ def read_root() -> dict[str, str]:
 
 @app.post("/analyze")
 def analyze_contract(request: AnalyzeRequest) -> dict[str, Any]:
+    global latest_analysis
+
     result = run_full_analysis(request.contract_text, request.use_llm)
+
+    with _analysis_lock:
+        latest_analysis = {
+            "findings": result["findings"],
+            "risk_scores": result["risk_scores"],
+            "ai_act_check": result["ai_act_check"],
+            "gdpr_check": result["gdpr_check"],
+            "llm_summary": result["llm_summary"],
+            "rag_references": result["rag_references"],
+        }
 
     return {
         "project": "Legal Clause Analyzer",
