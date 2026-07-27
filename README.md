@@ -2,10 +2,13 @@
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Framework-green)
-![License](https://img.shields.io/badge/License-Educational-lightgrey)
-![Status](https://img.shields.io/badge/Status-Development)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Release](https://img.shields.io/badge/Release-v1.0.0-blue)
 ![LLM](https://img.shields.io/badge/LLM-Ollama%20%2B%20Llama%203-orange)
-![RAG](https://img.shields.io/badge/RAG-ChromaDB%20%2B%20bge--small-purple)
+![RAG](https://img.shields.io/badge/RAG-ChromaDB%20%2B%20bge--small-purple) 
+![CI](https://img.shields.io/github/actions/workflow/status/soheilon21-a11y/Legal-Clause-Analyzer/ci.yml?branch=main&label=CI)
+
+![Docker](https://img.shields.io/badge/Docker-Supported-2496ED?logo=docker&logoColor=white)
 
 A privacy-first, AI-powered legal contract analyzer that detects legal clauses, evaluates GDPR and EU AI Act readiness, calculates risk scores, grounds LLM summaries in a local knowledge base via RAG, and generates professional compliance reports — all running locally.
 
