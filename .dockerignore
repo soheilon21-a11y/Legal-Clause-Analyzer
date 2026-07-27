@@ -19,6 +19,9 @@ requirements-dev.txt
 README.md
 images/
 
+# Build artifacts
+vector_store/
+
 # Docker files themselves
 Dockerfile
 .dockerignore

@@ -1,6 +1,7 @@
 from typing import Any
 import os
 import tempfile
+import threading
 from html import escape
 
 import fitz
@@ -27,6 +28,12 @@ client = OpenAI(
     base_url=LOCAL_LLM_BASE_URL,
     api_key=os.environ.get("OLLAMA_API_KEY", "ollama"),
 )
+
+# Guards for shared global state accessed from async endpoints.
+_analysis_lock = threading.Lock()
+_comparison_lock = threading.Lock()
+
+MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
 
 app = FastAPI(
     title="Legal Clause Analyzer",
@@ -823,21 +830,26 @@ async def analyze_pdf(
 
     global latest_analysis 
 
-    pdf_bytes = await file.read()
+    pdf_bytes = await file.read(MAX_UPLOAD_SIZE + 1)
+    if len(pdf_bytes) > MAX_UPLOAD_SIZE:
+        raise HTTPException(
+            status_code=413,
+            detail="PDF file exceeds the maximum allowed size of 10 MB.",
+        )
 
     contract_text = extract_text(pdf_bytes, file.filename)
 
     result = run_full_analysis(contract_text, use_llm)
 
-    latest_analysis = {
-        "findings": result["findings"],
-        "risk_scores": result["risk_scores"],
-        "ai_act_check": result["ai_act_check"],
-        "gdpr_check": result["gdpr_check"],
-        "llm_summary": result["llm_summary"],
-        "rag_references": result["rag_references"],
-    }
-
+    with _analysis_lock:
+        latest_analysis = {
+            "findings": result["findings"],
+            "risk_scores": result["risk_scores"],
+            "ai_act_check": result["ai_act_check"],
+            "gdpr_check": result["gdpr_check"],
+            "llm_summary": result["llm_summary"],
+            "rag_references": result["rag_references"],
+        }
 
     return {
         "project": "Legal Clause Analyzer",
@@ -869,20 +881,26 @@ async def analyze_docx(
             detail="Only DOCX files are supported.",
         )
 
-    docx_bytes = await file.read()
+    docx_bytes = await file.read(MAX_UPLOAD_SIZE + 1)
+    if len(docx_bytes) > MAX_UPLOAD_SIZE:
+        raise HTTPException(
+            status_code=413,
+            detail="DOCX file exceeds the maximum allowed size of 10 MB.",
+        )
 
     contract_text = extract_text(docx_bytes, file.filename)
 
     result = run_full_analysis(contract_text, use_llm)
 
-    latest_analysis = {
-        "findings": result["findings"],
-        "risk_scores": result["risk_scores"],
-        "ai_act_check": result["ai_act_check"],
-        "gdpr_check": result["gdpr_check"],
-        "llm_summary": result["llm_summary"],
-        "rag_references": result["rag_references"],
-    }
+    with _analysis_lock:
+        latest_analysis = {
+            "findings": result["findings"],
+            "risk_scores": result["risk_scores"],
+            "ai_act_check": result["ai_act_check"],
+            "gdpr_check": result["gdpr_check"],
+            "llm_summary": result["llm_summary"],
+            "rag_references": result["rag_references"],
+        }
 
     return {
         "project": "Legal Clause Analyzer",
@@ -1601,8 +1619,18 @@ async def compare_contracts(
 
     global latest_comparison
 
-    bytes_a = await file_a.read()
-    bytes_b = await file_b.read()
+    bytes_a = await file_a.read(MAX_UPLOAD_SIZE + 1)
+    bytes_b = await file_b.read(MAX_UPLOAD_SIZE + 1)
+    if len(bytes_a) > MAX_UPLOAD_SIZE:
+        raise HTTPException(
+            status_code=413,
+            detail="Contract A file exceeds the maximum allowed size of 10 MB.",
+        )
+    if len(bytes_b) > MAX_UPLOAD_SIZE:
+        raise HTTPException(
+            status_code=413,
+            detail="Contract B file exceeds the maximum allowed size of 10 MB.",
+        )
 
     try:
         text_a = extract_text(bytes_a, file_a.filename)
@@ -1625,13 +1653,14 @@ async def compare_contracts(
 
     comparison = compare_analysis_results(result_a, result_b)
 
-    latest_comparison = {
-        "file_a": file_a.filename,
-        "file_b": file_b.filename,
-        "result_a": result_a,
-        "result_b": result_b,
-        "comparison": comparison,
-    }
+    with _comparison_lock:
+        latest_comparison = {
+            "file_a": file_a.filename,
+            "file_b": file_b.filename,
+            "result_a": result_a,
+            "result_b": result_b,
+            "comparison": comparison,
+        }
 
     return {
         "project": "Legal Clause Analyzer",
@@ -1688,11 +1717,10 @@ def download_comparison_report(
         comparison=latest_comparison["comparison"],
     )
 
-    tmp_dir = r"C:\Users\Lenovo\AppData\Local\Temp\opencode"
     with tempfile.NamedTemporaryFile(
         delete=False,
         suffix=".pdf",
-        dir=tmp_dir,
+        dir=tempfile.gettempdir(),
     ) as tmp:
         tmp.write(pdf.getvalue())
         tmp_path = tmp.name

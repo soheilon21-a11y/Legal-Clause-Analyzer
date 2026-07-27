@@ -5,6 +5,25 @@ All notable changes to the Legal Clause Analyzer project are documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0-beta — 2026-07-27
+
+### Added
+
+- **Knowledge Base** — 10 plain-text legal reference documents (GDPR Article 5, 13, 32, Data Protection Principles, EU AI Act High-Risk AI Systems, EU AI Act Human Oversight, Force Majeure, Confidentiality, Limitation of Liability, Termination) in `knowledge_base/`.
+- **RAG references in PDF reports** — the generated PDF now includes a "Referenced Legal Sources" section showing document title, filename, and excerpt when RAG retrieval is active.
+
+### Changed
+
+- **Prompt engineering refactor** — split the LLM prompt into named constants (`SYSTEM_INSTRUCTIONS`, `ANALYSIS_INSTRUCTIONS`, `OUTPUT_FORMAT_INSTRUCTIONS`, `CONTRACT_TEXT_SECTION`) for maintainability.
+- **Improved LLM report quality** — updated prompt structure to produce more concise, professional reports with sections: Executive Summary, Key Legal Findings, GDPR Assessment, EU AI Act Assessment, Overall Risk Evaluation, Practical Recommendations.
+- **Upload size limits** — all file-upload endpoints now reject files larger than 10 MB with a 413 response.
+- **Thread-safe global state** — added `threading.Lock` guards around shared `latest_analysis` and `latest_comparison` writes to prevent race conditions under concurrent requests.
+- **Cross-platform temp directory** — replaced hardcoded Windows path with `tempfile.gettempdir()` for the comparison PDF download endpoint.
+
+### Fixed
+
+- `.dockerignore` now excludes `vector_store/` to prevent bloating the Docker image.
+
 ## v1.0.0-alpha — 2026-07-22
 
 ### Added

@@ -82,7 +82,17 @@ Legal-Clause-Analyzer/
 │   └── swagger.png
 │
 ├── knowledge_base/                 # .txt reference documents for RAG
-│   └── .gitkeep
+│   ├── .gitkeep
+│   ├── confidentiality_clause.txt
+│   ├── eu_ai_act_high_risk_ai_systems.txt
+│   ├── eu_ai_act_human_oversight.txt
+│   ├── force_majeure_clause.txt
+│   ├── gdpr_article_13.txt
+│   ├── gdpr_article_32.txt
+│   ├── gdpr_article_5.txt
+│   ├── gdpr_data_protection_principles.txt
+│   ├── limitation_of_liability_clause.txt
+│   └── termination_clause.txt
 │
 ├── rag/                            # RAG pipeline package
 │   ├── __init__.py
@@ -233,11 +243,11 @@ Embeddings (BAAI/bge-small-en-v1.5)
     ↓
 ChromaDB
     ↓
-Retriever
+Retriever (Top-3)
     ↓
-LLM
+LLM Summary + PDF Report
     ↓
-Legal Report
+RAG References Section in PDF
 ```
 
 **Pipeline components (`rag/` package):**
@@ -250,7 +260,7 @@ Legal Report
 | `index_builder.py` | Offline builder — stores chunks + metadata in ChromaDB |
 | `retriever.py` | Top-K similarity search over the local index |
 
-**LLM integration (current):** when `use_llm=True`, the retriever fetches the Top-3 most relevant legal chunks and prepends them to the LLM prompt as reference context. If retrieval fails for any reason — missing index, empty collection, model error — the API silently falls back to the original prompt and never fails the request. The `use_llm=False` path is completely unaffected.
+**LLM integration:** when `use_llm=True`, the retriever fetches the Top-3 most relevant legal chunks and prepends them to the LLM prompt as reference context. The LLM is instructed to use these references naturally in its report. If retrieval fails — missing index, empty collection, model error — the API silently falls back to the original prompt. When LLM summarization is enabled, the generated PDF report includes a "Referenced Legal Sources" section listing each retrieved document with its title, filename, and a short excerpt. The `use_llm=False` path is completely unaffected.
 
 Build or refresh the index after changing the knowledge base:
 
@@ -293,6 +303,8 @@ python -m rag.index_builder
 - Deterministic rule-based legal analysis (no external services required)
 - Local LLM summaries with graceful offline fallback
 - Offline RAG indexing and Top-3 retrieval, integrated into the LLM path
+- RAG references included in generated PDF reports
+- Curated knowledge base of 10 legal reference documents
 - Docker image with health check and non-root execution
 - CI pipeline running a 19-test pytest suite on every push and pull request
 
@@ -300,11 +312,8 @@ python -m rag.index_builder
 
 ## 15. Roadmap
 
-- RAG references in generated PDF reports
-- Expanded curated legal knowledge base
 - Risk dashboard
 - Split Docker images (slim API image vs. full RAG image)
-- Prompt engineering improvements
 - Additional file formats and batch analysis
 
 ---
