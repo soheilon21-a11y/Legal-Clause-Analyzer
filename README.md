@@ -189,13 +189,13 @@ pytest -v
 Build the image:
 
 ```bash
-docker build -t legal-clause-analyzer:1.3 .
+docker build -t legal-clause-analyzer:latest .
 ```
 
 Run the container:
 
 ```bash
-docker run -d --name legal-clause-analyzer -p 8000:8000 legal-clause-analyzer:1.3
+docker run -d --name legal-clause-analyzer -p 8000:8000 legal-clause-analyzer:latest
 ```
 
 The API will be available at `http://localhost:8000/docs`.
@@ -310,7 +310,7 @@ python -m rag.index_builder
 
 ---
 
-## 15. Roadmap
+## 15. Future Work
 
 - Risk dashboard
 - Split Docker images (slim API image vs. full RAG image)
