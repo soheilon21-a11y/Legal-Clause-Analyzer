@@ -1,0 +1,161 @@
+{
+  "playbook_id": "eu_general_commercial",
+  "playbook_name": "EU General Commercial Contract Playbook",
+  "jurisdiction": "EU",
+  "version": "1.0",
+  "rules": [
+    {
+      "clause_type": "Liability Limitation",
+      "detection_keywords": [
+        "limitation of liability",
+        "cap on liability",
+        "limit liability",
+        "liability shall not exceed",
+        "exclude liability",
+        "no liability"
+      ],
+      "negotiable": true,
+      "risk_level": "High",
+      "preferred_wording": "Neither party's total aggregate liability under this agreement shall exceed 150% of the fees paid or payable in the twelve (12) months preceding the event giving rise to the claim. This limitation shall not apply to: (a) breach of confidentiality obligations; (b) infringement of intellectual property rights; (c) wilful misconduct or gross negligence; (d) liability that cannot be limited under applicable law, including under the EU Product Liability Directive.",
+      "alternative_wordings": [
+        "Each party's liability shall be limited to direct damages only, excluding consequential, indirect, or punitive damages, subject to a cap of 100% of the contract value. Exclusions shall not apply to death, personal injury, fraud, or statutory obligations.",
+        "Liability for breach of this agreement shall be capped at the total fees paid under this agreement, excluding liability arising from gross negligence, wilful misconduct, or data protection breaches under GDPR."
+      ],
+      "reason": "Unlimited or one-sided liability caps expose the non-capped party to disproportionate risk. EU law restricts exclusion of liability for death, personal injury, and gross negligence. Mutual caps with carve-outs are market standard.",
+      "jurisdiction_notes": "Under EU law, liability exclusions for death, personal injury, fraud, and wilful misconduct are generally unenforceable. The Unfair Contract Terms Directive (93/13/EEC) may void overly broad exclusions in B2C contexts."
+    },
+    {
+      "clause_type": "Termination",
+      "detection_keywords": [
+        "termination",
+        "terminate this agreement",
+        "termination for convenience",
+        "termination for cause",
+        "right to terminate",
+        "notice of termination"
+      ],
+      "negotiable": true,
+      "risk_level": "Medium",
+      "preferred_wording": "Either party may terminate this agreement for material breach by giving thirty (30) days' prior written notice, provided the breaching party has not cured the breach within such notice period. Either party may terminate for convenience upon ninety (90) days' prior written notice. Upon termination, each party shall return or destroy the other party's confidential information within fifteen (15) business days and provide written certification of compliance.",
+      "alternative_wordings": [
+        "This agreement may be terminated by either party with sixty (60) days' written notice. Termination for cause shall be effective immediately upon written notice if the breach is not cured within thirty (30) days. Post-termination obligations including data return and confidentiality survival shall remain in effect."
+      ],
+      "reason": "Termination clauses should include clear notice periods, cure periods, and post-termination obligations. One-sided termination rights create imbalance. Adequate transition periods protect both parties.",
+      "jurisdiction_notes": "EU member states may impose mandatory notice periods for certain commercial relationships. The Commercial Agents Directive (86/653/EEC) sets minimum notice periods for agency agreements."
+    },
+    {
+      "clause_type": "Confidentiality",
+      "detection_keywords": [
+        "confidential information",
+        "confidentiality",
+        "non-disclosure",
+        "trade secret",
+        "proprietary information"
+      ],
+      "negotiable": true,
+      "risk_level": "Medium",
+      "preferred_wording": "Each party shall treat the other party's confidential information with the same degree of care it uses for its own confidential information, but in no event less than reasonable care. Confidential information shall be used solely for the purposes of this agreement and disclosed only to personnel with a need to know who are bound by equivalent confidentiality obligations. These obligations shall survive termination for a period of three (3) years. Exceptions apply to information that is: (a) publicly available without breach; (b) independently developed; (c) rightfully received from a third party; or (d) required to be disclosed by law or court order, subject to prior written notice where legally permissible.",
+      "alternative_wordings": [
+        "Confidential information shall be protected by reasonable security measures and used only for the purposes of this agreement. The confidentiality obligations shall survive for five (5) years from disclosure. Standard carve-outs for public domain, independent development, and legal compulsion shall apply."
+      ],
+      "reason": "Confidentiality clauses should define scope, duration, exceptions, and return/deletion obligations. Overly broad or perpetual confidentiality terms may be unenforceable and create compliance burdens.",
+      "jurisdiction_notes": "The EU Trade Secrets Directive (2016/943) harmonizes trade secret protection across member states. Confidentiality obligations should align with this directive's requirements for 'reasonable steps' to protect information."
+    },
+    {
+      "clause_type": "Data Protection",
+      "detection_keywords": [
+        "personal data",
+        "data protection",
+        "gdpr",
+        "data subject",
+        "data processor",
+        "data controller",
+        "data processing agreement",
+        "data processing"
+      ],
+      "negotiable": true,
+      "risk_level": "Critical",
+      "preferred_wording": "To the extent that either party processes personal data under this agreement, the parties shall comply with the GDPR (Regulation (EU) 2016/679) and applicable data protection laws. The data controller shall be clearly identified and shall ensure a lawful basis for processing. A Data Processing Agreement (DPA) compliant with Article 28 GDPR shall be executed, specifying: (a) the subject matter and duration of processing; (b) the nature and purpose of processing; (c) the types of personal data and categories of data subjects; (d) appropriate technical and organisational security measures; (e) sub-processor approval and notification obligations; (f) data subject rights assistance; (g) data breach notification within 24 hours; and (h) data return or deletion upon termination. International data transfers shall comply with Chapter V GDPR.",
+      "alternative_wordings": [
+        "Each party shall comply with GDPR obligations applicable to its role as controller or processor. A compliant DPA shall be maintained. Personal data shall be processed only for the purposes specified in this agreement, with appropriate security measures, and shall not be transferred outside the EEA without adequate safeguards."
+      ],
+      "reason": "Data protection clauses must comply GDPR Article 28 requirements for processor agreements. Missing DPAs, unclear roles, or absent breach notification obligations create significant regulatory risk including fines up to 4% of global turnover.",
+      "jurisdiction_notes": "GDPR applies to all processing of personal data within the EU/EEA, regardless of where the processor is established. Post-Brexit, the UK GDPR applies separately. Standard Contractual Clauses (SCCs) are required for transfers to non-adequate countries."
+    },
+    {
+      "clause_type": "Force Majeure",
+      "detection_keywords": [
+        "force majeure",
+        "act of god",
+        "unforeseeable event",
+        "natural disaster",
+        "event beyond reasonable control"
+      ],
+      "negotiable": true,
+      "risk_level": "Medium",
+      "preferred_wording": "Neither party shall be liable for failure or delay in performing its obligations under this agreement where such failure results from an event beyond the affected party's reasonable control, including but not limited to: natural disasters, war, terrorism, pandemics, government actions, or critical infrastructure failures. The affected party shall: (a) notify the other party in writing within five (5) business days of the event; (b) use reasonable efforts to mitigate the impact; and (c) resume performance as soon as reasonably practicable. If the force majeure event continues for more than ninety (90) consecutive days, either party may terminate this agreement upon thirty (30) days' written notice without liability.",
+      "alternative_wordings": [
+        "Performance shall be excused during periods of force majeure, provided the affected party gives prompt written notice and uses commercially reasonable efforts to mitigate. Termination rights arise after sixty (60) days of continuous force majeure."
+      ],
+      "reason": "Force majeure clauses should include notification duties, mitigation obligations, and termination rights for prolonged events. Overly broad force majeure clauses can be used to avoid legitimate obligations.",
+      "jurisdiction_notes": "EU member states have varying approaches to force majeure in civil law vs. common law jurisdictions. The clause should be explicit rather than relying on statutory default rules."
+    },
+    {
+      "clause_type": "AI Systems",
+      "detection_keywords": [
+        "ai system",
+        "artificial intelligence",
+        "machine learning",
+        "automated decision",
+        "automated decision-making",
+        "algorithmic decision",
+        "predictive model"
+      ],
+      "negotiable": true,
+      "risk_level": "Critical",
+      "preferred_wording": "Where AI systems are deployed under this agreement, the deploying party shall comply with the EU AI Act (Regulation (EU) 2024/1689) and shall: (a) classify the AI system according to the risk-based framework; (b) implement human oversight mechanisms ensuring meaningful human control; (c) maintain comprehensive logging and audit trails; (d) ensure transparency by providing clear information to affected individuals; (e) implement a risk management system covering the full AI lifecycle; (f) ensure training data governance including quality, relevance, and bias monitoring; (g) report serious incidents to the relevant market surveillance authority within prescribed timelines; (h) maintain up-to-date technical documentation; and (i) cooperate with conformity assessments where required. The deploying party shall indemnify the other party against regulatory penalties arising from non-compliance.",
+      "alternative_wordings": [
+        "AI systems used under this agreement shall comply with the EU AI Act. The provider shall ensure human oversight, transparency, logging, and risk management. High-risk AI systems shall undergo conformity assessment before deployment."
+      ],
+      "reason": "The EU AI Act imposes significant obligations on providers and deployers of AI systems, particularly high-risk systems. Non-compliance can result in fines up to EUR 35 million or 7% of global turnover. Contracts must clearly allocate AI governance responsibilities.",
+      "jurisdiction_notes": "The EU AI Act entered into force on 1 August 2024 with phased implementation through 2027. High-risk AI systems in Annex III categories (employment, education, credit scoring, law enforcement, etc.) face the strictest requirements."
+    },
+    {
+      "clause_type": "Indemnification",
+      "detection_keywords": [
+        "indemnify",
+        "indemnification",
+        "hold harmless",
+        "indemnity",
+        "defend and indemnify"
+      ],
+      "negotiable": true,
+      "risk_level": "High",
+      "preferred_wording": "Each party shall indemnify, defend, and hold harmless the other party and its affiliates from and against any third-party claims, damages, losses, and expenses (including reasonable legal fees) arising from: (a) the indemnifying party's breach of this agreement; (b) the indemnifying party's negligence or wilful misconduct; or (c) the indemnifying party's infringement of third-party intellectual property rights. The indemnified party shall: (i) provide prompt written notice of any claim; (ii) grant the indemnifying party sole control of the defence; and (iii) provide reasonable cooperation. Indemnification obligations shall be subject to the liability cap set forth in this agreement.",
+      "alternative_wordings": [
+        "Each party shall indemnify the other against third-party claims arising from its own breach, negligence, or IP infringement, subject to the agreement's liability limitations and standard defence procedures."
+      ],
+      "reason": "One-sided indemnification clauses create disproportionate risk. Mutual indemnification with clear procedures, cooperation duties, and liability cap integration is market standard.",
+      "jurisdiction_notes": "EU member states may limit indemnification obligations in consumer contracts. B2B indemnification is generally enforceable but should be proportionate and mutual."
+    },
+    {
+      "clause_type": "Governing Law and Dispute Resolution",
+      "detection_keywords": [
+        "governing law",
+        "applicable law",
+        "jurisdiction",
+        "dispute resolution",
+        "arbitration",
+        "exclusive jurisdiction"
+      ],
+      "negotiable": true,
+      "risk_level": "Medium",
+      "preferred_wording": "This agreement shall be governed by and construed in accordance with the laws of [specified EU member state], without regard to its conflict of laws principles. The parties shall attempt to resolve any dispute arising under this agreement through good-faith negotiation within thirty (30) days. If unresolved, the dispute shall be submitted to mediation under the rules of [specified mediation body]. If mediation fails within sixty (60) days, the dispute shall be finally resolved by arbitration under the rules of the [ICC/LCIA/specified body], with the seat of arbitration in [specified city]. Nothing in this clause shall prevent either party from seeking injunctive relief from a court of competent jurisdiction.",
+      "alternative_wordings": [
+        "This agreement is governed by the laws of [jurisdiction]. Disputes shall first be escalated to senior management for resolution within thirty (30) days, followed by binding arbitration if unresolved."
+      ],
+      "reason": "Governing law and dispute resolution clauses should provide a clear escalation path (negotiation, mediation, arbitration) before litigation. Exclusive jurisdiction clauses should be mutual and specify a neutral forum where possible.",
+      "jurisdiction_notes": "The Brussels I Regulation (recast) governs jurisdiction within the EU for civil and commercial matters. Post-Brexit, the Lugano Convention or Hague Convention may apply for UK-EU disputes."
+    }
+  ]
+}

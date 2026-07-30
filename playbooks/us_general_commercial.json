@@ -1,0 +1,144 @@
+{
+  "playbook_id": "us_general_commercial",
+  "playbook_name": "US General Commercial Contract Playbook",
+  "jurisdiction": "US",
+  "version": "1.0",
+  "rules": [
+    {
+      "clause_type": "Liability Limitation",
+      "detection_keywords": [
+        "limitation of liability",
+        "cap on liability",
+        "limit liability",
+        "liability shall not exceed",
+        "exclude liability",
+        "no liability",
+        "consequential damages"
+      ],
+      "negotiable": true,
+      "risk_level": "High",
+      "preferred_wording": "EXCEPT FOR BREACHES OF CONFIDENTIALITY, INFRINGEMENT OF INTELLECTUAL PROPERTY RIGHTS, OR INDEMNIFICATION OBLIGATIONS, NEITHER PARTY SHALL BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES. EACH PARTY'S TOTAL AGGREGATE LIABILITY SHALL NOT EXCEED THE GREATER OF: (A) THE FEES PAID OR PAYABLE IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM, OR (B) $100,000. THESE LIMITATIONS SHALL APPLY TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW AND SHALL SURVIVE ANY FAILURE OF ESSENTIAL PURPOSE.",
+      "alternative_wordings": [
+        "Neither party shall be liable for indirect or consequential damages. Total liability shall be capped at the fees paid under this agreement in the prior twelve (12) months, with standard carve-outs for confidentiality breaches, IP infringement, and indemnification obligations."
+      ],
+      "reason": "US courts generally enforce liability caps and consequential damage exclusions between sophisticated commercial parties, but carve-outs for IP, confidentiality, and indemnification are market standard. Unconscionable or adhesive limitations may be struck down under UCC or state law.",
+      "jurisdiction_notes": "Enforceability varies by state. California, New York, and Delaware have different standards for consequential damage exclusions. The UCC governs goods transactions and imposes a reasonableness standard."
+    },
+    {
+      "clause_type": "Termination",
+      "detection_keywords": [
+        "termination",
+        "terminate this agreement",
+        "termination for convenience",
+        "termination for cause",
+        "right to terminate",
+        "notice of termination"
+      ],
+      "negotiable": true,
+      "risk_level": "Medium",
+      "preferred_wording": "Either party may terminate this agreement: (a) for material breach, upon thirty (30) days' prior written notice if the breach is not cured within such period; (b) for convenience, upon sixty (60) days' prior written notice; or (c) immediately upon written notice if the other party becomes insolvent, files for bankruptcy, or makes an assignment for the benefit of creditors. Upon termination or expiration: (i) all licenses granted hereunder shall terminate; (ii) each party shall return or certify destruction of the other party's confidential information within fifteen (15) business days; and (iii) the receiving party shall pay all undisputed fees accrued through the effective date of termination.",
+      "alternative_wordings": [
+        "This agreement may be terminated for cause with thirty (30) days' notice and cure period, or for convenience with ninety (90) days' notice. Standard post-termination obligations apply."
+      ],
+      "reason": "Termination clauses need clear triggers, notice periods, cure periods, and post-termination wind-down obligations. One-sided termination-for-convenience rights create commercial risk.",
+      "jurisdiction_notes": "Under the UCC, termination provisions in goods contracts must be reasonable. Some states impose implied covenant of good faith and fair dealing that may limit termination-for-convenience rights."
+    },
+    {
+      "clause_type": "Confidentiality",
+      "detection_keywords": [
+        "confidential information",
+        "confidentiality",
+        "non-disclosure",
+        "trade secret",
+        "proprietary information"
+      ],
+      "negotiable": true,
+      "risk_level": "Medium",
+      "preferred_wording": "Each party agrees to hold in confidence all Confidential Information (as defined herein) of the disclosing party and to use the same degree of care, but no less than reasonable care, to prevent unauthorized disclosure. Confidential Information shall be used solely for the purposes of performing obligations under this agreement. Disclosure shall be limited to employees, contractors, and advisors with a need to know who are bound by written confidentiality obligations at least as protective as this agreement. These obligations shall survive termination for a period of three (3) years, except for trade secrets which shall be protected for so long as they remain trade secrets under applicable law. Standard exceptions apply for information that is: (a) in the public domain without breach; (b) independently developed without use of Confidential Information; (c) rightfully obtained from a third party without restriction; or (d) required to be disclosed by law, regulation, or court order, subject to prior written notice where legally permitted.",
+      "alternative_wordings": [
+        "Confidential Information shall be protected using reasonable security measures and used only for agreement purposes. Obligations survive for three (3) years, with trade secrets protected indefinitely. Standard carve-outs apply."
+      ],
+      "reason": "Confidentiality clauses should balance protection with practicality. Overly broad definitions of 'confidential information' or perpetual obligations (other than for trade secrets) may be unenforceable and create compliance burdens.",
+      "jurisdiction_notes": "The Defend Trade Secrets Act (DTSA) and state Uniform Trade Secrets Acts (UTSA) provide statutory protection. The DTSA requires notice of immunity provisions in employee agreements. California has specific restrictions on non-compete and confidentiality scope."
+    },
+    {
+      "clause_type": "Data Protection",
+      "detection_keywords": [
+        "personal data",
+        "personal information",
+        "data protection",
+        "data privacy",
+        "privacy policy",
+        "ccpa",
+        "cpa",
+        "consumer data"
+      ],
+      "negotiable": true,
+      "risk_level": "High",
+      "preferred_wording": "Each party shall comply with all applicable federal, state, and local data protection and privacy laws, including but not limited to the California Consumer Privacy Act (CCPA) as amended by the California Privacy Rights Act (CPRA), and any other applicable state comprehensive privacy laws. To the extent either party processes personal information under this agreement: (a) the receiving party shall act as a 'service provider' or 'contractor' as defined under applicable law; (b) personal information shall be processed only for the business purposes specified in this agreement; (c) the receiving party shall not sell, share, or retain personal information beyond the purposes of this agreement; (d) appropriate technical and organizational security measures shall be implemented; (e) data breaches shall be reported within seventy-two (72) hours; and (f) the receiving party shall assist with consumer rights requests within commercially reasonable timeframes. A Data Processing Addendum shall be executed where required.",
+      "alternative_wordings": [
+        "Each party shall comply with applicable US privacy laws including CCPA/CPRA. Personal information shall be processed only for agreement purposes, with appropriate security measures and breach notification within 72 hours."
+      ],
+      "reason": "US data protection is governed by a patchwork of federal and state laws. The CCPA/CPRA imposes significant obligations on businesses processing California residents' data. Missing 'service provider' language can trigger 'sale' classification under CCPA.",
+      "jurisdiction_notes": "As of 2024, 18+ states have enacted comprehensive privacy laws. Federal legislation (ADPPA) remains pending. HIPAA applies to health data, GLBA to financial data, and COPPA to children's data. State breach notification laws vary (48 hours to 90 days)."
+    },
+    {
+      "clause_type": "Force Majeure",
+      "detection_keywords": [
+        "force majeure",
+        "act of god",
+        "unforeseeable event",
+        "natural disaster",
+        "event beyond reasonable control",
+        "impossibility",
+        "impracticability"
+      ],
+      "negotiable": true,
+      "risk_level": "Medium",
+      "preferred_wording": "Neither party shall be liable for any failure or delay in performing its obligations (other than payment obligations) under this agreement where such failure results from causes beyond the affected party's reasonable control, including but not limited to: acts of God, natural disasters, war, terrorism, civil unrest, pandemics, epidemics, government orders, sanctions, embargoes, strikes (other than those involving the affected party's own employees), utility or infrastructure failures, or internet service disruptions. The affected party shall: (a) provide written notice within five (5) business days; (b) use commercially reasonable efforts to mitigate the impact; and (c) resume performance as soon as reasonably practicable. If the force majeure event continues for more than ninety (90) consecutive days, either party may terminate this agreement upon thirty (30) days' written notice without penalty.",
+      "alternative_wordings": [
+        "Performance is excused during force majeure events, subject to prompt notice and commercially reasonable mitigation efforts. Termination rights arise after ninety (90) days of continuous force majeure."
+      ],
+      "reason": "Force majeure clauses should enumerate specific events, include notification and mitigation duties, and provide termination rights for prolonged events. Payment obligations are typically excluded from force majeure protection.",
+      "jurisdiction_notes": "US common law recognizes doctrines of impossibility, impracticability, and frustration of purpose, but these are narrow. A well-drafted force majeure clause provides broader and more predictable protection than common law defaults."
+    },
+    {
+      "clause_type": "Indemnification",
+      "detection_keywords": [
+        "indemnify",
+        "indemnification",
+        "hold harmless",
+        "indemnity",
+        "defend and indemnify"
+      ],
+      "negotiable": true,
+      "risk_level": "High",
+      "preferred_wording": "Each party (the 'Indemnifying Party') shall indemnify, defend, and hold harmless the other party and its affiliates, officers, directors, employees, and agents (collectively, the 'Indemnified Parties') from and against any and all third-party claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising from: (a) the Indemnifying Party's material breach of this agreement; (b) the Indemnifying Party's negligence or wilful misconduct; or (c) the Indemnifying Party's infringement of any third-party intellectual property right. The Indemnified Party shall: (i) provide prompt written notice of any claim (failure to provide prompt notice shall relieve the Indemnifying Party only to the extent it is materially prejudiced); (ii) grant the Indemnifying Party sole control of the defence and settlement; and (iii) provide reasonable cooperation at the Indemnifying Party's expense. The Indemnifying Party shall not settle any claim that imposes obligations on the Indemnified Party without its prior written consent.",
+      "alternative_wordings": [
+        "Mutual indemnification for breach, negligence, and IP infringement, with standard defence procedures, consent requirements for settlements, and cooperation obligations."
+      ],
+      "reason": "One-sided indemnification is a significant commercial risk. Mutual indemnification with clear procedures protects both parties. Settlement consent requirements prevent the indemnifying party from agreeing to terms that bind the indemnified party.",
+      "jurisdiction_notes": "Indemnification clauses are generally enforceable in US B2B contracts. Some states limit indemnification for a party's own negligence in construction contracts (anti-indemnity statutes). Insurance requirements should complement indemnification obligations."
+    },
+    {
+      "clause_type": "Governing Law and Dispute Resolution",
+      "detection_keywords": [
+        "governing law",
+        "applicable law",
+        "jurisdiction",
+        "dispute resolution",
+        "arbitration",
+        "exclusive jurisdiction",
+        "choice of law"
+      ],
+      "negotiable": true,
+      "risk_level": "Medium",
+      "preferred_wording": "This agreement shall be governed by and construed in accordance with the laws of the State of [Delaware/New York], without regard to its conflict of laws principles. Any dispute arising out of or relating to this agreement shall be resolved as follows: (a) the parties shall first attempt to resolve the dispute through good-faith negotiation between senior executives within thirty (30) days; (b) if unresolved, the dispute shall be submitted to non-binding mediation under the rules of JAMS or the American Arbitration Association (AAA); (c) if mediation fails within sixty (60) days, the dispute shall be finally resolved by binding arbitration administered by [JAMS/AAA] under its Commercial Arbitration Rules, with the seat of arbitration in [specified city]. The arbitrator(s) shall issue a reasoned written decision. Nothing in this clause shall prevent either party from seeking injunctive or other equitable relief from a court of competent jurisdiction to protect its intellectual property rights or confidential information.",
+      "alternative_wordings": [
+        "This agreement is governed by the laws of [state]. Disputes shall be escalated to senior management, then mediation, then binding arbitration. Equitable relief remains available for IP and confidentiality matters."
+      ],
+      "reason": "Multi-tiered dispute resolution clauses (negotiation, mediation, arbitration) reduce litigation costs and preserve business relationships. Delaware and New York law are preferred for commercial predictability. Equitable relief carve-outs protect IP and confidentiality.",
+      "jurisdiction_notes": "The Federal Arbitration Act (FAA) strongly favours arbitration. Delaware Court of Chancery is preferred for complex commercial disputes. New York is preferred for financial transactions. Forum selection clauses are generally enforceable post-Atlantic Marine."
+    }
+  ]
+}

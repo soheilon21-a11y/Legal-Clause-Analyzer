@@ -20,6 +20,9 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 from io import BytesIO
 
+from redlining import RedliningEngine, RedlineRequest, RedlineResult
+from redlining.pdf_report import generate_redline_pdf
+
 
 LOCAL_LLM_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434/v1")
 MODEL_ID = os.environ.get("LLM_MODEL", "llama3")
@@ -45,6 +48,10 @@ app = FastAPI(
 )
 latest_analysis = {}
 latest_comparison = {}
+latest_redline: RedlineResult | None = None
+latest_redline_source: str = ""
+_redline_lock = threading.Lock()
+_redlining_engine = RedliningEngine()
 
 
 class AnalyzeRequest(BaseModel):
@@ -822,23 +829,28 @@ def extract_text(file_bytes: bytes, filename: str) -> str:
     )
 
 
-@app.post("/analyze-pdf")
-async def analyze_pdf(
-    file: UploadFile = File(...),
-    use_llm: bool = False,
+def _analyze_uploaded_file(
+    file_bytes: bytes,
+    filename: str,
+    use_llm: bool,
+    file_label: str = "File",
 ) -> dict[str, Any]:
+    """Shared logic for file-based analysis endpoints.
 
-    global latest_analysis 
+    Validates file size, extracts text, runs the full analysis,
+    stores the result in global state, and returns the API response.
+    """
+    global latest_analysis
 
-    pdf_bytes = await file.read(MAX_UPLOAD_SIZE + 1)
-    if len(pdf_bytes) > MAX_UPLOAD_SIZE:
+    if len(file_bytes) > MAX_UPLOAD_SIZE:
         raise HTTPException(
             status_code=413,
-            detail="PDF file exceeds the maximum allowed size of 10 MB.",
+            detail=(
+                f"{file_label} exceeds the maximum allowed size of 10 MB."
+            ),
         )
 
-    contract_text = extract_text(pdf_bytes, file.filename)
-
+    contract_text = extract_text(file_bytes, filename)
     result = run_full_analysis(contract_text, use_llm)
 
     with _analysis_lock:
@@ -853,7 +865,7 @@ async def analyze_pdf(
 
     return {
         "project": "Legal Clause Analyzer",
-        "source": file.filename,
+        "source": filename,
         "characters_analyzed": len(contract_text),
         "clause_findings": result["findings"],
         "ai_act_compliance_check": result["ai_act_check"],
@@ -865,6 +877,17 @@ async def analyze_pdf(
             "demonstration only. It is not legal advice."
         ),
     }
+
+
+@app.post("/analyze-pdf")
+async def analyze_pdf(
+    file: UploadFile = File(...),
+    use_llm: bool = False,
+) -> dict[str, Any]:
+    pdf_bytes = await file.read(MAX_UPLOAD_SIZE + 1)
+    return _analyze_uploaded_file(
+        pdf_bytes, file.filename, use_llm, "PDF file"
+    )
 
 
 @app.post("/analyze-docx")
@@ -872,9 +895,6 @@ async def analyze_docx(
     file: UploadFile = File(...),
     use_llm: bool = False,
 ) -> dict[str, Any]:
-
-    global latest_analysis
-
     if not file.filename.lower().endswith(".docx"):
         raise HTTPException(
             status_code=400,
@@ -882,40 +902,9 @@ async def analyze_docx(
         )
 
     docx_bytes = await file.read(MAX_UPLOAD_SIZE + 1)
-    if len(docx_bytes) > MAX_UPLOAD_SIZE:
-        raise HTTPException(
-            status_code=413,
-            detail="DOCX file exceeds the maximum allowed size of 10 MB.",
-        )
-
-    contract_text = extract_text(docx_bytes, file.filename)
-
-    result = run_full_analysis(contract_text, use_llm)
-
-    with _analysis_lock:
-        latest_analysis = {
-            "findings": result["findings"],
-            "risk_scores": result["risk_scores"],
-            "ai_act_check": result["ai_act_check"],
-            "gdpr_check": result["gdpr_check"],
-            "llm_summary": result["llm_summary"],
-            "rag_references": result["rag_references"],
-        }
-
-    return {
-        "project": "Legal Clause Analyzer",
-        "source": file.filename,
-        "characters_analyzed": len(contract_text),
-        "clause_findings": result["findings"],
-        "ai_act_compliance_check": result["ai_act_check"],
-        "gdpr_privacy_check": result["gdpr_check"],
-        "risk_scores": result["risk_scores"],
-        "llm_summary": result["llm_summary"],
-        "disclaimer": (
-            "This output is for compliance-readiness and "
-            "demonstration only. It is not legal advice."
-        ),
-    }
+    return _analyze_uploaded_file(
+        docx_bytes, file.filename, use_llm, "DOCX file"
+    )
 
 
 def compare_analysis_results(
@@ -2107,4 +2096,147 @@ def analyze_contract(request: AnalyzeRequest) -> dict[str, Any]:
             "This output is for compliance-readiness and product "
             "demonstration only. It is not legal advice."
         ),
-    } 
+    }
+
+
+@app.get("/playbooks")
+def list_playbooks() -> dict[str, Any]:
+    """List all available legal playbooks."""
+    playbooks = _redlining_engine.playbooks
+    return {
+        "project": "Legal Clause Analyzer",
+        "playbooks": [
+            {
+                "playbook_id": pb.playbook_id,
+                "playbook_name": pb.playbook_name,
+                "jurisdiction": pb.jurisdiction,
+                "version": pb.version,
+                "rules_count": len(pb.rules),
+            }
+            for pb in playbooks
+        ],
+        "total": len(playbooks),
+    }
+
+
+@app.post("/redline")
+def redline_contract(request: RedlineRequest) -> dict[str, Any]:
+    """Analyze contract text and return AI-assisted redline suggestions.
+
+    Accepts contract text and optional playbook filters. Returns
+    structured redline suggestions that require lawyer review
+    before use. Never modifies the original contract.
+    """
+    global latest_redline, latest_redline_source
+
+    result = _redlining_engine.analyze(request)
+
+    with _redline_lock:
+        latest_redline = result
+        latest_redline_source = "text_input"
+
+    return {
+        "project": "Legal Clause Analyzer",
+        "source": "text_input",
+        "redline_result": result.model_dump(),
+    }
+
+
+@app.post("/redline-pdf")
+async def redline_pdf(
+    file: UploadFile = File(...),
+    use_llm: bool = False,
+    playbook_ids: str = "",
+) -> dict[str, Any]:
+    """Analyze an uploaded PDF or DOCX file and return redline suggestions.
+
+    Accepts a PDF or DOCX file, extracts text, and runs the redlining
+    engine against available playbooks. Returns structured suggestions
+    that require lawyer review.
+    """
+    global latest_redline, latest_redline_source
+
+    file_bytes = await file.read(MAX_UPLOAD_SIZE + 1)
+    if len(file_bytes) > MAX_UPLOAD_SIZE:
+        raise HTTPException(
+            status_code=413,
+            detail="File exceeds the maximum allowed size of 10 MB.",
+        )
+
+    try:
+        contract_text = extract_text(file_bytes, file.filename)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+    ids = [pid.strip() for pid in playbook_ids.split(",") if pid.strip()]
+
+    request = RedlineRequest(
+        contract_text=contract_text,
+        playbook_ids=ids,
+        use_llm=use_llm,
+    )
+
+    result = _redlining_engine.analyze(request)
+
+    with _redline_lock:
+        latest_redline = result
+        latest_redline_source = file.filename
+
+    return {
+        "project": "Legal Clause Analyzer",
+        "source": file.filename,
+        "characters_analyzed": len(contract_text),
+        "redline_result": result.model_dump(),
+    }
+
+
+@app.get(
+    "/download-redline-report",
+    response_class=FileResponse,
+    responses={
+        200: {
+            "description": "Redline analysis PDF report",
+            "content": {
+                "application/pdf": {
+                    "schema": {"type": "string", "format": "binary"},
+                }
+            },
+        },
+        404: {"description": "No redline analysis has been generated yet"},
+    },
+)
+def download_redline_report(
+    background_tasks: BackgroundTasks,
+) -> FileResponse:
+    """Download the most recent redline analysis as a professional PDF."""
+    global latest_redline, latest_redline_source
+
+    if latest_redline is None:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "No redline analysis available. "
+                "Please run a redline analysis first."
+            ),
+        )
+
+    pdf_buffer = generate_redline_pdf(
+        result=latest_redline,
+        contract_source=latest_redline_source,
+    )
+
+    with tempfile.NamedTemporaryFile(
+        delete=False,
+        suffix=".pdf",
+        dir=tempfile.gettempdir(),
+    ) as tmp:
+        tmp.write(pdf_buffer.getvalue())
+        tmp_path = tmp.name
+
+    background_tasks.add_task(os.remove, tmp_path)
+
+    return FileResponse(
+        tmp_path,
+        media_type="application/pdf",
+        filename="Redline_Report.pdf",
+    ) 
