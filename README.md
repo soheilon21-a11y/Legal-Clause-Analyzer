@@ -2,14 +2,14 @@
 
 # Legal Clause Analyzer
 
-### Privacy-First AI-Powered Legal Contract Analysis
+### Privacy-First AI-Powered Contract Analysis Platform
 
 *Detect clauses. Assess GDPR & EU AI Act readiness. Score risk. Redline contracts. Generate compliance reports — all running locally.*
 
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Ollama](https://img.shields.io/badge/LLM-Ollama%20%2B%20Llama%203-FF6F00)](https://ollama.com)
-[![RAG](https://img.shields.io/badge/RAG-ChromaDB%20%2B%20bge--small-7B1FA2)](https://www.trychroma.com/)
+[![RAG](https://img.shields.io/badge/RAG-ChromaDB%20%7C%20BGE--Small-7B1FA2)](https://www.trychroma.com/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![Tests](https://img.shields.io/badge/Tests-96%20passing-4CAF50)](#testing)
 [![CI](https://img.shields.io/github/actions/workflow/status/soheilon21-a11y/Legal-Clause-Analyzer/ci.yml?branch=main&label=CI&logo=githubactions&logoColor=white)](https://github.com/soheilon21-a11y/Legal-Clause-Analyzer/actions)
