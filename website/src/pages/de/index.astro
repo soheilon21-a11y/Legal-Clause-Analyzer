@@ -5,11 +5,12 @@ import Section from '../../components/Section.astro';
 import Card from '../../components/Card.astro';
 import t from '../../i18n/de.json';
 
-const repo = 'https://github.com/soheilon21-a11y/Legal-Clause-Analyzer';
-const issues = repo + '/issues';
+const email = 'mailto:soheil.on21@gmail.com';
+const linkedin = 'https://www.linkedin.com/in/soheil-onsori';
+const github = 'https://github.com/soheilon21-a11y';
 ---
 
-<Base lang="de" t={t}>
+<Base lang="de" t={t} path="">
   <Hero t={t} />
 
   <Section id="problem" eyebrow={t.problem.eyebrow} title={t.problem.title}>
@@ -74,15 +75,25 @@ const issues = repo + '/issues';
   </Section>
 
   <Section id="about" eyebrow={t.about.eyebrow} title={t.about.title}>
-    <p class="lead">{t.about.body}</p>
-    <p class="note">{t.about.focus}</p>
+    <p class="lead">{t.about.body1}</p>
+    <p class="about-story">{t.about.body2}</p>
   </Section>
 
   <Section id="contact" eyebrow={t.contact.eyebrow} title={t.contact.title}>
     <p class="lead">{t.contact.body}</p>
-    <div class="actions">
-      <a class="btn" href={repo}>{t.contact.repository}</a>
-      <a class="btn btn-secondary" href={issues}>{t.contact.issues}</a>
+    <div class="contact-grid">
+      <a class="contact-card" href={email}>
+        <span class="contact-label">{t.contact.email.label}</span>
+        <span class="contact-value">{t.contact.email.value}</span>
+      </a>
+      <a class="contact-card" href={linkedin} rel="noopener">
+        <span class="contact-label">{t.contact.linkedin.label}</span>
+        <span class="contact-value">{t.contact.linkedin.value}</span>
+      </a>
+      <a class="contact-card" href={github} rel="noopener">
+        <span class="contact-label">{t.contact.github.label}</span>
+        <span class="contact-value">{t.contact.github.value}</span>
+      </a>
     </div>
   </Section>
 </Base>

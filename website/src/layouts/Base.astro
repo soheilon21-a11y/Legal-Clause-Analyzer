@@ -3,8 +3,23 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 
-const { lang, t } = Astro.props;
-const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const {
+  lang,
+  t,
+  path = '',
+  title = t.meta.title,
+  description = t.meta.description,
+} = Astro.props;
+
+const SITE = 'https://soheilon21-a11y.github.io';
+const baseSlash = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : import.meta.env.BASE_URL + '/';
+const baseTrim = import.meta.env.BASE_URL.replace(/\/$/, '');
+const enUrl = `${SITE}${baseTrim}/${path}`;
+const deUrl = `${SITE}${baseTrim}/de/${path}`;
+const canonical = lang === 'de' ? deUrl : enUrl;
+const faviconHref = baseSlash + 'favicon.svg';
 ---
 
 <!doctype html>
@@ -13,16 +28,26 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" />
-    <title>{t.meta.title}</title>
-    <meta name="description" content={t.meta.description} />
-    <link rel="icon" type="image/svg+xml" href={base + 'favicon.svg'} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#1E4B3C" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="de" href={deUrl} />
+    <link rel="alternate" hreflang="x-default" href={enUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href={faviconHref} />
   </head>
   <body>
     <a class="skip-link" href="#main">{t.skipLink}</a>
-    <Nav t={t} lang={lang} />
+    <Nav t={t} lang={lang} path={path} />
     <main id="main">
       <slot />
     </main>
-    <Footer t={t} />
+    <Footer t={t} lang={lang} />
   </body>
 </html>

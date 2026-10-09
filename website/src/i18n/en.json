@@ -17,6 +17,8 @@
   "skipLink": "Skip to content",
   "nav": {
     "aria": "Site navigation",
+    "menu": "Menu",
+    "githubAria": "GitHub repository",
     "problem": "Problem",
     "how": "How it works",
     "features": "Features",
@@ -33,7 +35,25 @@
     "title": "Every clause recorded. Every risk made clear.",
     "subtitle": "Namag is a privacy-first contract analysis tool that runs entirely on your machine. Detect clauses, assess GDPR and EU AI Act readiness, score risk, and redline contracts with a local LLM — no cloud, no contract data ever leaving your computer.",
     "ctaPrimary": "View on GitHub",
-    "ctaSecondary": "How it works"
+    "ctaSecondary": "How it works",
+    "trust": [
+      "100% local",
+      "MIT",
+      "96 tests"
+    ],
+    "artifact": {
+      "kicker": "Detected clause",
+      "risk": "High risk",
+      "clauseType": "Limitation of liability",
+      "source": "Contract · §7",
+      "quote": "The Supplier's aggregate liability arising out of or in connection with this Agreement shall not exceed the total fees paid in the twelve months preceding the claim.",
+      "redlineLabel": "Suggested redline",
+      "redlineDel": "shall not exceed the total fees paid in the twelve months preceding the claim",
+      "redlineIns": "shall not exceed the greater of the total fees paid or €100,000",
+      "score": "Risk 72/100 (illustrative)",
+      "review": "Human review required",
+      "disclaimer": "Illustrative example — not a live analysis."
+    }
   },
   "problem": {
     "eyebrow": "The problem",
@@ -261,21 +281,105 @@
   },
   "about": {
     "eyebrow": "About",
-    "title": "Built by a lawyer who codes",
-    "body": "Namag is maintained by Soheil Onsori, a law graduate (LL.B.) and developer. The builder is not a licensed attorney: this project does not offer legal representation, certification, or regulatory approval.",
-    "focus": "Focused on privacy-first legal AI."
+    "title": "Why the name Namag",
+    "body1": "Namag is maintained by Soheil Onsori, a law graduate (LL.B.) and developer building privacy-first AI tools for legal work. He is the author of the Post-Meeting Legal Analyzer and holds a Legal Engineering Certification from Harvey Academy and Anthropic's AI Fluency credential. His focus is the intersection of legal reasoning, applied AI, and compliance — GDPR and the EU AI Act. The builder is not a licensed attorney: this project does not offer legal representation, certification, or regulatory approval.",
+    "body2": "Namag — from the Middle Persian nāmag: a letter, a document, a written record. The word lives on in Persian today as nāme — the letter that carries a message from one person to another. I named this tool after that idea: every contract deserves a written, verifiable analysis."
   },
   "contact": {
     "eyebrow": "Contact",
-    "title": "Get in touch via GitHub",
-    "body": "The project lives on GitHub. Report issues, request features, or browse the source.",
-    "repository": "Repository",
-    "issues": "Report an issue"
+    "title": "Get in touch",
+    "body": "Questions, feedback, or collaboration — reach out through any of these channels.",
+    "email": {
+      "label": "Email",
+      "value": "soheil.on21@gmail.com"
+    },
+    "linkedin": {
+      "label": "LinkedIn",
+      "value": "soheil-onsori"
+    },
+    "github": {
+      "label": "GitHub",
+      "value": "soheilon21-a11y"
+    }
   },
   "footer": {
     "privacyNote": "Runs locally. No cloud, no trackers, no cookies.",
     "license": "MIT License",
-    "builtWith": "Built with Python, FastAPI, local LLMs, and RAG."
+    "builtWith": "Built with Python, FastAPI, local LLMs, and RAG.",
+    "explore": {
+      "title": "Explore"
+    },
+    "follow": {
+      "title": "Follow",
+      "linkedin": "LinkedIn",
+      "github": "GitHub"
+    },
+    "legal": {
+      "title": "Legal",
+      "imprint": "Impressum",
+      "privacy": "Privacy policy"
+    },
+    "copyright": "© 2026 Soheil Onsori."
+  },
+  "impressum": {
+    "meta": {
+      "title": "Impressum — Namag",
+      "description": "Legal notice for Namag, an open-source legal-clause analyzer maintained by Soheil Onsori."
+    },
+    "title": "Impressum",
+    "lede": "Legal notice for the Namag open-source project.",
+    "items": [
+      {
+        "label": "Responsible",
+        "value": "Soheil Onsori — open-source developer"
+      },
+      {
+        "label": "Project",
+        "value": "Non-commercial open-source project"
+      },
+      {
+        "label": "Contact",
+        "value": "GitHub or soheil.on21@gmail.com"
+      },
+      {
+        "label": "Legal note",
+        "value": "This is not legal advice. Namag offers no legal representation, certification, or regulatory approval."
+      }
+    ]
+  },
+  "datenschutz": {
+    "meta": {
+      "title": "Privacy policy — Namag",
+      "description": "Privacy policy for the Namag website. No cookies, no trackers, no external requests."
+    },
+    "title": "Privacy policy",
+    "lede": "This website is private by default.",
+    "items": [
+      {
+        "label": "Cookies",
+        "value": "This website sets no cookies."
+      },
+      {
+        "label": "Trackers",
+        "value": "No tracking or statistics tools are used."
+      },
+      {
+        "label": "External requests",
+        "value": "The website makes no external requests and loads no remote resources."
+      },
+      {
+        "label": "Hosting",
+        "value": "Hosted on GitHub Pages. GitHub's own privacy terms apply to their infrastructure."
+      },
+      {
+        "label": "The analyzer",
+        "value": "The analyzer runs locally and processes nothing remotely."
+      },
+      {
+        "label": "Data questions",
+        "value": "For data questions, contact soheil.on21@gmail.com."
+      }
+    ]
   },
   "notfound": {
     "title": "Page not found",

@@ -1,0 +1,9 @@
+---
+import Base from '../layouts/Base.astro';
+import LegalPage from '../components/LegalPage.astro';
+import t from '../i18n/en.json';
+---
+
+<Base lang="en" t={t} path="impressum/" title={t.impressum.meta.title} description={t.impressum.meta.description}>
+  <LegalPage t={t} section="impressum" />
+</Base>

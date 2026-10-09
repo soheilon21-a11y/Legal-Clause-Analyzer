@@ -1,16 +1,33 @@
 ---
+import HeroArtifact from './HeroArtifact.astro';
+
 const { t } = Astro.props;
 const repo = 'https://github.com/soheilon21-a11y/Legal-Clause-Analyzer';
 ---
 
 <section class="hero">
   <div class="container">
-    <p class="hero-eyebrow">{t.hero.eyebrow}</p>
-    <h1 class="hero-title">{t.hero.title}</h1>
-    <p class="hero-subtitle">{t.hero.subtitle}</p>
-    <div class="hero-actions">
-      <a class="btn" href={repo}>{t.hero.ctaPrimary}</a>
-      <a class="btn btn-secondary" href="#how">{t.hero.ctaSecondary}</a>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="hero-eyebrow">{t.hero.eyebrow}</p>
+        <h1 class="hero-title">{t.hero.title}</h1>
+        <p class="hero-subtitle">{t.hero.subtitle}</p>
+      </div>
+      <div class="hero-aside">
+        <div class="hero-actions">
+          <a class="btn" href={repo} rel="noopener">{t.hero.ctaPrimary}</a>
+          <a class="btn btn-secondary" href="#how">{t.hero.ctaSecondary}</a>
+        </div>
+        <ul class="hero-trust">
+          {t.hero.trust.map((item) => (
+            <li>
+              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
+    <HeroArtifact t={t} />
   </div>
 </section>
