@@ -282,7 +282,7 @@
   "about": {
     "eyebrow": "About",
     "title": "Why the name Namag",
-    "body1": "Namag is maintained by Soheil Onsori, a law graduate (LL.B.) and developer building privacy-first AI tools for legal work. He is the author of the Post-Meeting Legal Analyzer and holds a Legal Engineering Certification from Harvey Academy and Anthropic's AI Fluency credential. His focus is the intersection of legal reasoning, applied AI, and compliance — GDPR and the EU AI Act. The builder is not a licensed attorney: this project does not offer legal representation, certification, or regulatory approval.",
+    "body1": "Namag is maintained by Soheil Onsori, a law graduate (LL.B.) and developer building privacy-first AI tools for legal work. He is the author of the Post-Meeting Legal Analyzer and holds a Legal Engineering Certification from Harvey Academy and Anthropic's AI Fluency credential. His focus is the intersection of legal reasoning, applied AI, and compliance — GDPR and the EU AI Act. He is a law graduate and developer — not a licensed attorney — so all outputs are designed for review by qualified legal professionals.",
     "body2": "Namag — from the Middle Persian nāmag: a letter, a document, a written record. The word lives on in Persian today as nāme — the letter that carries a message from one person to another. I named this tool after that idea: every contract deserves a written, verifiable analysis."
   },
   "contact": {
@@ -343,7 +343,7 @@
       },
       {
         "label": "Legal note",
-        "value": "This is not legal advice. Namag offers no legal representation, certification, or regulatory approval."
+        "value": "Namag is a non-commercial open-source project by a law graduate (LL.B.). It is not a licensed legal service, and its outputs require review by qualified legal professionals. This is not legal advice."
       }
     ]
   },
