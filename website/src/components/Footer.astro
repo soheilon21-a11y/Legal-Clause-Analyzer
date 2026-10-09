@@ -1,17 +1,41 @@
 ---
-const { t } = Astro.props;
-const repo = 'https://github.com/soheilon21-a11y/Legal-Clause-Analyzer';
+import Logo from './Logo.astro';
+
+const { t, lang } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const home = lang === 'de' ? base + 'de/' : base;
+const linkedin = 'https://www.linkedin.com/in/soheil-onsori';
+const github = 'https://github.com/soheilon21-a11y';
+const licenseUrl = 'https://github.com/soheilon21-a11y/Legal-Clause-Analyzer/blob/main/LICENSE';
 ---
 
 <footer class="site-footer">
   <div class="container footer-inner">
-    <div>
-      <p class="footer-brand"><strong>{t.brand.name}</strong> {t.brand.descriptor}</p>
+    <div class="footer-col footer-brand">
+      <Logo href={home} />
       <p class="footer-note">{t.footer.privacyNote}</p>
-    </div>
-    <div>
-      <p class="footer-meta"><a class="footer-link" href={repo}>{t.footer.license}</a></p>
       <p class="footer-built">{t.footer.builtWith}</p>
     </div>
+    <div class="footer-col">
+      <h4 class="footer-title">{t.footer.explore.title}</h4>
+      <a class="footer-link" href={home + '#problem'}>{t.nav.problem}</a>
+      <a class="footer-link" href={home + '#opensource'}>{t.nav.opensource}</a>
+      <a class="footer-link" href={home + '#roadmap'}>{t.nav.roadmap}</a>
+      <a class="footer-link" href={home + '#contact'}>{t.nav.contact}</a>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-title">{t.footer.follow.title}</h4>
+      <a class="footer-link" href={linkedin} rel="noopener">{t.footer.follow.linkedin}</a>
+      <a class="footer-link" href={github} rel="noopener">{t.footer.follow.github}</a>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-title">{t.footer.legal.title}</h4>
+      <a class="footer-link" href={home + 'impressum/'}>{t.footer.legal.imprint}</a>
+      <a class="footer-link" href={home + 'datenschutz/'}>{t.footer.legal.privacy}</a>
+      <a class="footer-link" href={licenseUrl} rel="noopener">{t.footer.license}</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p class="footer-copyright">{t.footer.copyright}</p>
   </div>
 </footer>

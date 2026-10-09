@@ -1,0 +1,25 @@
+---
+const { t, section } = Astro.props;
+const email = 'mailto:soheil.on21@gmail.com';
+const github = 'https://github.com/soheilon21-a11y';
+---
+
+<section class="legal">
+  <div class="container legal-container">
+    <p class="eyebrow">{t.brand.name}</p>
+    <h1 class="legal-title">{t[section].title}</h1>
+    <p class="legal-lede">{t[section].lede}</p>
+    <dl class="legal-list">
+      {t[section].items.map((item) => (
+        <div class="legal-item">
+          <dt>{item.label}</dt>
+          <dd>{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+    <div class="legal-contact">
+      <a class="btn btn-secondary" href={email}>soheil.on21@gmail.com</a>
+      <a class="btn btn-secondary" href={github} rel="noopener">github.com/soheilon21-a11y</a>
+    </div>
+  </div>
+</section>

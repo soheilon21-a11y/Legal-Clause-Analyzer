@@ -17,6 +17,8 @@
   "skipLink": "Zum Inhalt springen",
   "nav": {
     "aria": "Seitennavigation",
+    "menu": "Menü",
+    "githubAria": "GitHub-Repository",
     "problem": "Problem",
     "how": "So funktioniert es",
     "features": "Funktionen",
@@ -33,7 +35,25 @@
     "title": "Jede Klausel erfasst. Jedes Risiko verständlich gemacht.",
     "subtitle": "Namag ist eine datenschutzorientierte Vertragsanalyse, die vollständig auf Ihrem Rechner läuft. Vertragsklauseln erkennen, DSGVO- und EU-KI-Verordnung-Readiness prüfen, Risiken bewerten und Verträge mit einer lokalen KI redlinen — ohne Cloud, ohne dass Vertragsdaten Ihren Computer verlassen.",
     "ctaPrimary": "Auf GitHub ansehen",
-    "ctaSecondary": "So funktioniert es"
+    "ctaSecondary": "So funktioniert es",
+    "trust": [
+      "100 % lokal",
+      "MIT",
+      "96 Tests"
+    ],
+    "artifact": {
+      "kicker": "Erkannte Klausel",
+      "risk": "Hohes Risiko",
+      "clauseType": "Haftungsbeschränkung",
+      "source": "Vertrag · §7",
+      "quote": "Die Gesamthaftung des Anbieters aus oder im Zusammenhang mit diesem Vertrag darf die in den zwölf Monaten vor der Geltendmachung gezahlten Gesamtgebühren nicht übersteigen.",
+      "redlineLabel": "Redlining-Vorschlag",
+      "redlineDel": "darf die in den zwölf Monaten vor der Geltendmachung gezahlten Gesamtgebühren nicht übersteigen",
+      "redlineIns": "darf den höheren Betrag aus den gezahlten Gesamtgebühren oder 100.000 € nicht übersteigen",
+      "score": "Risiko 72/100 (veranschaulichend)",
+      "review": "Menschliche Prüfung erforderlich",
+      "disclaimer": "Veranschaulichendes Beispiel — keine Live-Analyse."
+    }
   },
   "problem": {
     "eyebrow": "Das Problem",
@@ -261,21 +281,105 @@
   },
   "about": {
     "eyebrow": "Über das Projekt",
-    "title": "Entwickelt von einem Juristen, der programmiert",
-    "body": "Namag wird von Soheil Onsori gepflegt, einem Juristen (LL.B.) und Entwickler. Der Entwickler ist kein zugelassener Rechtsanwalt: Dieses Projekt bietet keine Rechtsvertretung, Zertifizierung oder behördliche Zulassung.",
-    "focus": "Im Fokus: datenschutzorientierte Rechts-KI."
+    "title": "Warum der Name Namag",
+    "body1": "Namag wird von Soheil Onsori gepflegt, einem Juristen (LL.B.) und Entwickler, der datenschutzorientierte KI-Werkzeuge für die Rechtspraxis baut. Er ist der Autor des Post-Meeting Legal Analyzer und hat das Legal Engineering Certificate der Harvey Academy sowie das AI-Fluency-Zertifikat von Anthropic erworben. Sein Schwerpunkt liegt an der Schnittstelle von juristischem Denken, angewandter KI und Compliance — DSGVO und EU-KI-Verordnung. Der Entwickler ist kein zugelassener Rechtsanwalt: Dieses Projekt bietet keine Rechtsvertretung, Zertifizierung oder behördliche Zulassung.",
+    "body2": "Namag — vom mittelpersischen nāmag: ein Brief, ein Dokument, eine schriftliche Aufzeichnung. Das Wort lebt im heutigen Persisch als nāme fort — der Brief, der eine Botschaft von einem Menschen zum anderen trägt. Ich habe dieses Werkzeug nach dieser Idee benannt: Jeder Vertrag verdient eine schriftliche, überprüfbare Analyse."
   },
   "contact": {
     "eyebrow": "Kontakt",
-    "title": "Kontakt über GitHub",
-    "body": "Das Projekt lebt auf GitHub. Melden Sie Fehler, schlagen Sie Funktionen vor oder durchsuchen Sie den Quellcode.",
-    "repository": "Repository",
-    "issues": "Problem melden"
+    "title": "Kontakt aufnehmen",
+    "body": "Fragen, Feedback oder Zusammenarbeit — erreichen Sie mich über einen dieser Kanäle.",
+    "email": {
+      "label": "E-Mail",
+      "value": "soheil.on21@gmail.com"
+    },
+    "linkedin": {
+      "label": "LinkedIn",
+      "value": "soheil-onsori"
+    },
+    "github": {
+      "label": "GitHub",
+      "value": "soheilon21-a11y"
+    }
   },
   "footer": {
     "privacyNote": "Läuft lokal. Keine Cloud, keine Tracker, keine Cookies.",
     "license": "MIT-Lizenz",
-    "builtWith": "Entwickelt mit Python, FastAPI, lokalen LLMs und RAG."
+    "builtWith": "Entwickelt mit Python, FastAPI, lokalen LLMs und RAG.",
+    "explore": {
+      "title": "Entdecken"
+    },
+    "follow": {
+      "title": "Folgen",
+      "linkedin": "LinkedIn",
+      "github": "GitHub"
+    },
+    "legal": {
+      "title": "Rechtliches",
+      "imprint": "Impressum",
+      "privacy": "Datenschutzerklärung"
+    },
+    "copyright": "© 2026 Soheil Onsori."
+  },
+  "impressum": {
+    "meta": {
+      "title": "Impressum — Namag",
+      "description": "Impressum für Namag, einen Open-Source-Vertragsklausel-Analyzer von Soheil Onsori."
+    },
+    "title": "Impressum",
+    "lede": "Impressum für das Open-Source-Projekt Namag.",
+    "items": [
+      {
+        "label": "Verantwortlich",
+        "value": "Soheil Onsori — Open-Source-Entwickler"
+      },
+      {
+        "label": "Projekt",
+        "value": "Nicht-kommerzielles Open-Source-Projekt"
+      },
+      {
+        "label": "Kontakt",
+        "value": "GitHub oder soheil.on21@gmail.com"
+      },
+      {
+        "label": "Rechtlicher Hinweis",
+        "value": "Dies ist keine Rechtsberatung. Namag bietet keine Rechtsvertretung, Zertifizierung oder behördliche Zulassung."
+      }
+    ]
+  },
+  "datenschutz": {
+    "meta": {
+      "title": "Datenschutzerklärung — Namag",
+      "description": "Datenschutzerklärung für die Namag-Website. Keine Cookies, keine Analyse, keine externen Anfragen."
+    },
+    "title": "Datenschutzerklärung",
+    "lede": "Diese Website ist standardmäßig privat.",
+    "items": [
+      {
+        "label": "Cookies",
+        "value": "Diese Website setzt keine Cookies."
+      },
+      {
+        "label": "Analyse & Tracker",
+        "value": "Es werden keine Analyse- oder Tracking-Tools eingesetzt."
+      },
+      {
+        "label": "Externe Anfragen",
+        "value": "Die Website stellt keine externen Anfragen und lädt keine entfernten Ressourcen."
+      },
+      {
+        "label": "Hosting",
+        "value": "Gehostet auf GitHub Pages. Für deren Infrastruktur gelten die Datenschutzbestimmungen von GitHub."
+      },
+      {
+        "label": "Der Analyzer",
+        "value": "Der Analyzer läuft lokal und verarbeitet nichts aus der Ferne."
+      },
+      {
+        "label": "Datenschutzfragen",
+        "value": "Bei Fragen zum Datenschutz kontaktieren Sie soheil.on21@gmail.com."
+      }
+    ]
   },
   "notfound": {
     "title": "Seite nicht gefunden",

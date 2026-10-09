@@ -1,0 +1,25 @@
+---
+const { t } = Astro.props;
+const a = t.hero.artifact;
+---
+
+<figure class="artifact">
+  <div class="artifact-head">
+    <span class="artifact-kicker">{a.kicker}</span>
+    <span class="artifact-risk"><span class="dot" aria-hidden="true"></span>{a.risk}</span>
+  </div>
+  <div class="artifact-body">
+    <h3 class="artifact-clause">{a.clauseType}</h3>
+    <span class="artifact-source-label">{a.source}</span>
+    <blockquote class="artifact-quote">{a.quote}</blockquote>
+    <div class="artifact-redline">
+      <span class="artifact-redline-label">{a.redlineLabel}</span>
+      <p class="artifact-redline-text"><del>{a.redlineDel}</del> <ins>{a.redlineIns}</ins></p>
+    </div>
+    <div class="artifact-meta">
+      <span class="artifact-score">{a.score}</span>
+      <span class="artifact-review">{a.review}</span>
+    </div>
+    <p class="artifact-disclaimer">{a.disclaimer}</p>
+  </div>
+</figure>
