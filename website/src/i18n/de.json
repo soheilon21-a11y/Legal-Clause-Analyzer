@@ -282,7 +282,7 @@
   "about": {
     "eyebrow": "Über das Projekt",
     "title": "Warum der Name Namag",
-    "body1": "Namag wird von Soheil Onsori gepflegt, einem Juristen (LL.B.) und Entwickler, der datenschutzorientierte KI-Werkzeuge für die Rechtspraxis baut. Er ist der Autor des Post-Meeting Legal Analyzer und hat das Legal Engineering Certificate der Harvey Academy sowie das AI-Fluency-Zertifikat von Anthropic erworben. Sein Schwerpunkt liegt an der Schnittstelle von juristischem Denken, angewandter KI und Compliance — DSGVO und EU-KI-Verordnung. Der Entwickler ist kein zugelassener Rechtsanwalt: Dieses Projekt bietet keine Rechtsvertretung, Zertifizierung oder behördliche Zulassung.",
+    "body1": "Namag wird von Soheil Onsori gepflegt, einem Juristen (LL.B.) und Entwickler, der datenschutzorientierte KI-Werkzeuge für die Rechtspraxis baut. Er ist der Autor des Post-Meeting Legal Analyzer und hat das Legal Engineering Certificate der Harvey Academy sowie das AI-Fluency-Zertifikat von Anthropic erworben. Sein Schwerpunkt liegt an der Schnittstelle von juristischem Denken, angewandter KI und Compliance — DSGVO und EU-KI-Verordnung. Er ist Jurist (LL.B.) und Entwickler — kein zugelassener Rechtsanwalt — daher sind alle Ergebnisse für die Prüfung durch qualifizierte Fachpersonen vorgesehen.",
     "body2": "Namag — vom mittelpersischen nāmag: ein Brief, ein Dokument, eine schriftliche Aufzeichnung. Das Wort lebt im heutigen Persisch als nāme fort — der Brief, der eine Botschaft von einem Menschen zum anderen trägt. Ich habe dieses Werkzeug nach dieser Idee benannt: Jeder Vertrag verdient eine schriftliche, überprüfbare Analyse."
   },
   "contact": {
@@ -343,7 +343,7 @@
       },
       {
         "label": "Rechtlicher Hinweis",
-        "value": "Dies ist keine Rechtsberatung. Namag bietet keine Rechtsvertretung, Zertifizierung oder behördliche Zulassung."
+        "value": "Namag ist ein nicht-kommerzielles Open-Source-Projekt eines Juristen (LL.B.). Es ist kein zugelassener Rechtsdienst, und seine Ergebnisse erfordern die Prüfung durch qualifizierte Fachpersonen. Dies ist keine Rechtsberatung."
       }
     ]
   },

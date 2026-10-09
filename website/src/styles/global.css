@@ -560,7 +560,7 @@ a:hover {
 .step {
   counter-increment: step;
   display: grid;
-  grid-template-columns: 2.5rem 1fr;
+  grid-template-columns: 3rem 1fr;
   gap: 1rem;
   padding: 1.25rem 0;
   border-top: 1px solid var(--border);
@@ -582,6 +582,8 @@ a:hover {
 }
 
 .step p {
+  grid-column: 2;
+  width: 100%;
   font-size: 0.92rem;
   color: var(--muted);
   margin: 0;
