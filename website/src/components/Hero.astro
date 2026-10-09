@@ -1,0 +1,16 @@
+---
+const { t } = Astro.props;
+const repo = 'https://github.com/soheilon21-a11y/Legal-Clause-Analyzer';
+---
+
+<section class="hero">
+  <div class="container">
+    <p class="hero-eyebrow">{t.hero.eyebrow}</p>
+    <h1 class="hero-title">{t.hero.title}</h1>
+    <p class="hero-subtitle">{t.hero.subtitle}</p>
+    <div class="hero-actions">
+      <a class="btn" href={repo}>{t.hero.ctaPrimary}</a>
+      <a class="btn btn-secondary" href="#how">{t.hero.ctaSecondary}</a>
+    </div>
+  </div>
+</section>

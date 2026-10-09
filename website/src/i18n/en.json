@@ -1,0 +1,285 @@
+{
+  "brand": {
+    "name": "Namag",
+    "descriptor": "Legal-Clause-Analyzer"
+  },
+  "lang": {
+    "en": "EN",
+    "de": "DE",
+    "enAria": "English",
+    "deAria": "Deutsch",
+    "toggle": "Language"
+  },
+  "meta": {
+    "title": "Namag — Legal-Clause-Analyzer",
+    "description": "Privacy-first AI contract analysis running fully locally. Detect clauses, assess GDPR & EU AI Act readiness, score risk, and redline contracts — no cloud, no data leaving your machine."
+  },
+  "skipLink": "Skip to content",
+  "nav": {
+    "aria": "Site navigation",
+    "problem": "Problem",
+    "how": "How it works",
+    "features": "Features",
+    "architecture": "Architecture",
+    "privacy": "Privacy & compliance",
+    "limitations": "Limitations",
+    "opensource": "Open source",
+    "roadmap": "Roadmap",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "hero": {
+    "eyebrow": "Open source · v1.0 · MIT",
+    "title": "Every clause recorded. Every risk made clear.",
+    "subtitle": "Namag is a privacy-first contract analysis tool that runs entirely on your machine. Detect clauses, assess GDPR and EU AI Act readiness, score risk, and redline contracts with a local LLM — no cloud, no contract data ever leaving your computer.",
+    "ctaPrimary": "View on GitHub",
+    "ctaSecondary": "How it works"
+  },
+  "problem": {
+    "eyebrow": "The problem",
+    "title": "Contract review is slow, manual, and risky",
+    "body": "Legal teams review hundreds of contracts every week, yet most clause analysis is done by hand. Meanwhile, the EU AI Act and GDPR impose obligations that many contracts fail to address — and sending confidential drafts to cloud AI tools is a privacy risk in itself.",
+    "points": [
+      {
+        "title": "Manual and expensive",
+        "body": "Clause analysis is slow, inconsistent, and costly when done by hand."
+      },
+      {
+        "title": "Compliance blind spots",
+        "body": "GDPR and EU AI Act requirements are easy to miss in long, dense contracts."
+      },
+      {
+        "title": "Cloud is a liability",
+        "body": "Confidential contracts should never be sent to external AI services."
+      }
+    ]
+  },
+  "how": {
+    "eyebrow": "How it works",
+    "title": "From contract to report — locally",
+    "steps": [
+      {
+        "title": "Upload a contract",
+        "body": "Provide a PDF, DOCX, or plain-text contract. Everything stays on your machine."
+      },
+      {
+        "title": "Deterministic analysis",
+        "body": "Clause detection, GDPR readiness, and EU AI Act checks run rule-based — no network calls."
+      },
+      {
+        "title": "Optional local LLM",
+        "body": "Enable Llama 3 via Ollama to add a grounded compliance summary and refined redlining."
+      },
+      {
+        "title": "Review every change",
+        "body": "Nothing is modified automatically. Every suggestion requires a human decision."
+      },
+      {
+        "title": "Export a report",
+        "body": "Generate a professional, color-coded PDF with cited legal references."
+      }
+    ]
+  },
+  "features": {
+    "eyebrow": "Features",
+    "title": "What it does today",
+    "items": [
+      {
+        "title": "Clause detection",
+        "body": "Detects force majeure, limitation of liability, termination, confidentiality, data protection, AI systems, indemnification, and governing law clauses."
+      },
+      {
+        "title": "GDPR readiness",
+        "body": "Identifies personal and sensitive data language and flags missing GDPR controls."
+      },
+      {
+        "title": "EU AI Act readiness",
+        "body": "Detects high-risk AI terms and surfaces control gaps such as human oversight and transparency."
+      },
+      {
+        "title": "Risk scoring",
+        "body": "Scores overall risk plus GDPR and EU AI Act readiness on a 0–100 scale."
+      },
+      {
+        "title": "AI redlining",
+        "body": "Playbook-driven negotiation suggestions for EU and US commercial contracts, always lawyer-reviewable."
+      },
+      {
+        "title": "Contract comparison",
+        "body": "Side-by-side structured diff of two contracts with score deltas."
+      },
+      {
+        "title": "PDF reports",
+        "body": "Color-coded analysis, comparison, and redline reports, generated on demand."
+      },
+      {
+        "title": "Grounded summaries",
+        "body": "Opt-in local LLM summaries tied to retrieved legal references — no invented facts."
+      }
+    ]
+  },
+  "architecture": {
+    "eyebrow": "Architecture",
+    "title": "A modular, local-first pipeline",
+    "body": "A FastAPI application following clean architecture and SOLID principles. Contracts are extracted, analyzed by deterministic rules, scored, and optionally enriched by a local LLM grounded in a curated legal corpus.",
+    "items": [
+      {
+        "title": "Ingestion",
+        "body": "PDF and DOCX extraction plus plain-text input."
+      },
+      {
+        "title": "Rule-based engine",
+        "body": "Deterministic clause detection and compliance checks."
+      },
+      {
+        "title": "Redlining engine",
+        "body": "Playbook-driven suggestions with confidence scoring."
+      },
+      {
+        "title": "Risk scoring",
+        "body": "Overall, GDPR, and EU AI Act scores on a 0–100 scale."
+      },
+      {
+        "title": "RAG pipeline",
+        "body": "ChromaDB vector store with sentence-transformers embeddings and top-3 retrieval."
+      },
+      {
+        "title": "Local LLM",
+        "body": "Llama 3 via Ollama, opt-in per request, with graceful fallback."
+      },
+      {
+        "title": "Reporting",
+        "body": "Professional PDF reports with cited legal sources."
+      }
+    ]
+  },
+  "privacy": {
+    "eyebrow": "Privacy & compliance",
+    "title": "Private by architecture",
+    "body": "Zero external API calls. All processing runs locally or inside Docker, so confidential contract text never leaves your machine.",
+    "items": [
+      {
+        "title": "Local AI execution",
+        "body": "Llama 3 runs through Ollama on your own hardware."
+      },
+      {
+        "title": "Privacy by design",
+        "body": "On-premise processing means no cloud provider ever sees your contracts."
+      },
+      {
+        "title": "Human control",
+        "body": "Approve or reject every suggested change; the tool never edits automatically."
+      },
+      {
+        "title": "Traceability",
+        "body": "LLM summaries are grounded in retrieved references shown with title, filename, and excerpt."
+      },
+      {
+        "title": "Compliance readiness",
+        "body": "GDPR and EU AI Act readiness checks — readiness, not certification."
+      },
+      {
+        "title": "Practical deployment",
+        "body": "Docker image with health checks and non-root execution."
+      }
+    ]
+  },
+  "limitations": {
+    "eyebrow": "Limitations & disclaimer",
+    "title": "Honest about what it can't do",
+    "disclaimer": "This is not legal advice.",
+    "intro": "Namag is a compliance-readiness tool for legal professionals, not a substitute for qualified legal review.",
+    "items": [
+      {
+        "title": "Keyword-based detection",
+        "body": "Clause detection relies on keyword matching, not semantic NLP; paraphrased clauses may be missed."
+      },
+      {
+        "title": "English only",
+        "body": "Keyword rules, playbooks, and the knowledge base are all in English."
+      },
+      {
+        "title": "Single-file analysis",
+        "body": "No batch or multi-document workflows."
+      },
+      {
+        "title": "LLM quality varies",
+        "body": "Llama 3 summaries and refinements are approximate and always require human review."
+      },
+      {
+        "title": "No persistent storage",
+        "body": "Results are held in memory only; there is no database or history."
+      },
+      {
+        "title": "No authentication",
+        "body": "The API has no auth layer and is not intended for direct public internet exposure."
+      },
+      {
+        "title": "Playbook coverage",
+        "body": "Ships with EU and US general commercial playbooks; other jurisdictions require manual authoring."
+      }
+    ],
+    "note": "Risk scores are an internal 0–100 assessment, not a legal judgment. Readiness checks are not certification."
+  },
+  "opensource": {
+    "eyebrow": "Open source",
+    "title": "Free, open, and tested",
+    "body": "Namag is MIT-licensed and open source. The full suite of 96 tests passes on every push and pull request.",
+    "items": [
+      {
+        "title": "MIT license",
+        "body": "Use, modify, and redistribute freely."
+      },
+      {
+        "title": "96/96 tests passing",
+        "body": "An automated pytest suite covering API, models, engine, playbooks, and PDF generation."
+      },
+      {
+        "title": "CI on GitHub Actions",
+        "body": "Tests run on every push and pull request."
+      },
+      {
+        "title": "Docker with health checks",
+        "body": "A production-ready, non-root container image."
+      }
+    ]
+  },
+  "roadmap": {
+    "eyebrow": "Roadmap",
+    "title": "Looking ahead",
+    "label": "Planned — not shipped",
+    "intro": "These items are documented in the project roadmap and are not yet implemented.",
+    "items": [
+      "Risk dashboard",
+      "Split Docker images",
+      "Additional file formats",
+      "Batch analysis",
+      "NLP-based clause detection",
+      "Persistent storage",
+      "Multi-language support"
+    ]
+  },
+  "about": {
+    "eyebrow": "About",
+    "title": "Built by a lawyer who codes",
+    "body": "Namag is maintained by Soheil Onsori, a law graduate (LL.B.) and developer. The builder is not a licensed attorney: this project does not offer legal representation, certification, or regulatory approval.",
+    "focus": "Focused on privacy-first legal AI."
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Get in touch via GitHub",
+    "body": "The project lives on GitHub. Report issues, request features, or browse the source.",
+    "repository": "Repository",
+    "issues": "Report an issue"
+  },
+  "footer": {
+    "privacyNote": "Runs locally. No cloud, no trackers, no cookies.",
+    "license": "MIT License",
+    "builtWith": "Built with Python, FastAPI, local LLMs, and RAG."
+  },
+  "notfound": {
+    "title": "Page not found",
+    "body": "The page you're looking for doesn't exist.",
+    "home": "Back to home"
+  }
+}

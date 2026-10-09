@@ -1,0 +1,32 @@
+---
+import LangToggle from './LangToggle.astro';
+
+const { t, lang } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const home = lang === 'de' ? base + 'de/' : base;
+const links = [
+  'problem',
+  'how',
+  'features',
+  'architecture',
+  'privacy',
+  'limitations',
+  'opensource',
+  'roadmap',
+  'about',
+  'contact',
+];
+---
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a class="brand" href={home}>
+      <span class="brand-name">{t.brand.name}</span>
+      <span class="brand-desc">{t.brand.descriptor}</span>
+    </a>
+    <nav class="site-nav" aria-label={t.nav.aria}>
+      {links.map((id) => <a class="nav-link" href={'#' + id}>{t.nav[id]}</a>)}
+    </nav>
+    <LangToggle t={t} lang={lang} />
+  </div>
+</header>

@@ -1,0 +1,88 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import Card from '../components/Card.astro';
+import t from '../i18n/en.json';
+
+const repo = 'https://github.com/soheilon21-a11y/Legal-Clause-Analyzer';
+const issues = repo + '/issues';
+---
+
+<Base lang="en" t={t}>
+  <Hero t={t} />
+
+  <Section id="problem" eyebrow={t.problem.eyebrow} title={t.problem.title}>
+    <p class="lead">{t.problem.body}</p>
+    <div class="grid grid-3">
+      {t.problem.points.map((p) => <Card title={p.title}><p>{p.body}</p></Card>)}
+    </div>
+  </Section>
+
+  <Section id="how" eyebrow={t.how.eyebrow} title={t.how.title}>
+    <ol class="steps">
+      {t.how.steps.map((s) => (
+        <li class="step">
+          <h3>{s.title}</h3>
+          <p>{s.body}</p>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <Section id="features" eyebrow={t.features.eyebrow} title={t.features.title}>
+    <div class="grid grid-3">
+      {t.features.items.map((f) => <Card title={f.title}><p>{f.body}</p></Card>)}
+    </div>
+  </Section>
+
+  <Section id="architecture" eyebrow={t.architecture.eyebrow} title={t.architecture.title}>
+    <p class="lead">{t.architecture.body}</p>
+    <div class="grid grid-2">
+      {t.architecture.items.map((f) => <Card title={f.title}><p>{f.body}</p></Card>)}
+    </div>
+  </Section>
+
+  <Section id="privacy" eyebrow={t.privacy.eyebrow} title={t.privacy.title}>
+    <p class="lead">{t.privacy.body}</p>
+    <div class="grid grid-3">
+      {t.privacy.items.map((f) => <Card title={f.title}><p>{f.body}</p></Card>)}
+    </div>
+  </Section>
+
+  <Section id="limitations" eyebrow={t.limitations.eyebrow} title={t.limitations.title}>
+    <p class="lead">{t.limitations.intro}</p>
+    <p class="disclaimer">{t.limitations.disclaimer}</p>
+    <ul class="list">
+      {t.limitations.items.map((f) => <li><strong>{f.title}.</strong> {f.body}</li>)}
+    </ul>
+    <p class="note">{t.limitations.note}</p>
+  </Section>
+
+  <Section id="opensource" eyebrow={t.opensource.eyebrow} title={t.opensource.title}>
+    <p class="lead">{t.opensource.body}</p>
+    <div class="grid grid-2">
+      {t.opensource.items.map((f) => <Card title={f.title}><p>{f.body}</p></Card>)}
+    </div>
+  </Section>
+
+  <Section id="roadmap" eyebrow={t.roadmap.eyebrow} title={t.roadmap.title}>
+    <p class="lead">{t.roadmap.intro}</p>
+    <ul class="list">
+      {t.roadmap.items.map((item) => <li><span class="planned">{t.roadmap.label}</span>{item}</li>)}
+    </ul>
+  </Section>
+
+  <Section id="about" eyebrow={t.about.eyebrow} title={t.about.title}>
+    <p class="lead">{t.about.body}</p>
+    <p class="note">{t.about.focus}</p>
+  </Section>
+
+  <Section id="contact" eyebrow={t.contact.eyebrow} title={t.contact.title}>
+    <p class="lead">{t.contact.body}</p>
+    <div class="actions">
+      <a class="btn" href={repo}>{t.contact.repository}</a>
+      <a class="btn btn-secondary" href={issues}>{t.contact.issues}</a>
+    </div>
+  </Section>
+</Base>
