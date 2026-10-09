@@ -1,0 +1,285 @@
+{
+  "brand": {
+    "name": "Namag",
+    "descriptor": "Legal-Clause-Analyzer"
+  },
+  "lang": {
+    "en": "EN",
+    "de": "DE",
+    "enAria": "English",
+    "deAria": "Deutsch",
+    "toggle": "Sprache"
+  },
+  "meta": {
+    "title": "Namag — Legal-Clause-Analyzer",
+    "description": "Datenschutzorientierte KI-Vertragsanalyse, die vollständig lokal läuft. Vertragsklauseln erkennen, DSGVO- und EU-KI-Verordnung-Readiness (AI Act) prüfen, Risiken bewerten und Verträge redlinen — ohne Cloud, ohne Datenverlust."
+  },
+  "skipLink": "Zum Inhalt springen",
+  "nav": {
+    "aria": "Seitennavigation",
+    "problem": "Problem",
+    "how": "So funktioniert es",
+    "features": "Funktionen",
+    "architecture": "Architektur",
+    "privacy": "Datenschutz & Compliance",
+    "limitations": "Grenzen",
+    "opensource": "Open Source",
+    "roadmap": "Roadmap",
+    "about": "Über das Projekt",
+    "contact": "Kontakt"
+  },
+  "hero": {
+    "eyebrow": "Open Source · v1.0 · MIT",
+    "title": "Jede Klausel erfasst. Jedes Risiko verständlich gemacht.",
+    "subtitle": "Namag ist eine datenschutzorientierte Vertragsanalyse, die vollständig auf Ihrem Rechner läuft. Vertragsklauseln erkennen, DSGVO- und EU-KI-Verordnung-Readiness prüfen, Risiken bewerten und Verträge mit einer lokalen KI redlinen — ohne Cloud, ohne dass Vertragsdaten Ihren Computer verlassen.",
+    "ctaPrimary": "Auf GitHub ansehen",
+    "ctaSecondary": "So funktioniert es"
+  },
+  "problem": {
+    "eyebrow": "Das Problem",
+    "title": "Vertragsprüfung ist langsam, manuell und riskant",
+    "body": "Rechtsteams prüfen jede Woche hunderte Verträge, doch die meiste Klauselanalyse erfolgt von Hand. Gleichzeitig stellen die EU-KI-Verordnung (AI Act) und die DSGVO Anforderungen, die viele Verträge nicht abdecken — und vertrauliche Entwürfe an Cloud-KI-Dienste zu senden, ist selbst ein Datenschutzrisiko.",
+    "points": [
+      {
+        "title": "Manuell und teuer",
+        "body": "Klauselanalyse von Hand ist langsam, uneinheitlich und kostspielig."
+      },
+      {
+        "title": "Compliance-Lücken",
+        "body": "DSGVO- und EU-KI-Verordnung-Anforderungen werden in langen Verträgen leicht übersehen."
+      },
+      {
+        "title": "Cloud als Risiko",
+        "body": "Vertrauliche Verträge sollten niemals an externe KI-Dienste gesendet werden."
+      }
+    ]
+  },
+  "how": {
+    "eyebrow": "So funktioniert es",
+    "title": "Vom Vertrag zum Bericht — vollständig lokal",
+    "steps": [
+      {
+        "title": "Vertrag hochladen",
+        "body": "Stellen Sie einen Vertrag als PDF, DOCX oder reinen Text bereit. Alles bleibt auf Ihrem Rechner."
+      },
+      {
+        "title": "Deterministische Analyse",
+        "body": "Klauselerkennung, DSGVO-Readiness und EU-KI-Verordnung-Prüfung laufen regelbasiert — ohne Netzwerkzugriff."
+      },
+      {
+        "title": "Optionale lokale KI",
+        "body": "Aktivieren Sie Llama 3 über Ollama, um eine belegte Compliance-Zusammenfassung und verfeinertes Redlining zu erhalten."
+      },
+      {
+        "title": "Jede Änderung prüfen",
+        "body": "Nichts wird automatisch geändert. Jeder Vorschlag erfordert eine menschliche Entscheidung."
+      },
+      {
+        "title": "Bericht exportieren",
+        "body": "Erstellen Sie einen professionellen, farbcodierten PDF-Bericht mit zitierten Rechtsquellen."
+      }
+    ]
+  },
+  "features": {
+    "eyebrow": "Funktionen",
+    "title": "Was das Tool heute kann",
+    "items": [
+      {
+        "title": "Klauselerkennung",
+        "body": "Erkennt Vertragsklauseln zu höherer Gewalt, Haftungsbeschränkung, Kündigung, Vertraulichkeit, Datenschutz, KI-Systemen, Freistellung und anwendbarem Recht."
+      },
+      {
+        "title": "DSGVO-Readiness",
+        "body": "Erkennt personenbezogene und sensible Daten und zeigt fehlende DSGVO-Kontrollen auf."
+      },
+      {
+        "title": "EU-KI-Verordnung-Readiness",
+        "body": "Erkennt Hochrisiko-KI-Begriffe und deckt Kontrolllücken wie menschliche Aufsicht und Transparenz auf."
+      },
+      {
+        "title": "Risikobewertung",
+        "body": "Bewertet das Gesamtrisiko sowie DSGVO- und EU-KI-Verordnung-Readiness auf einer Skala von 0 bis 100."
+      },
+      {
+        "title": "KI-gestützte Änderungsvorschläge (Redlining)",
+        "body": "Playbook-basierte Verhandlungsvorschläge für EU- und US-Verträge, stets durch Rechtsexpertinnen und -experten prüfbar."
+      },
+      {
+        "title": "Vertragsvergleich",
+        "body": "Strukturierter Nebeneinander-Vergleich zweier Verträge mit Score-Deltas."
+      },
+      {
+        "title": "PDF-Berichte",
+        "body": "Farbcodierte Analyse-, Vergleichs- und Redlining-Berichte, auf Abruf erzeugt."
+      },
+      {
+        "title": "Belegte Zusammenfassungen",
+        "body": "Optionale lokale KI-Zusammenfassungen, an abgerufene Rechtsquellen gebunden — keine erfundenen Fakten."
+      }
+    ]
+  },
+  "architecture": {
+    "eyebrow": "Architektur",
+    "title": "Eine modulare, lokale Pipeline",
+    "body": "Eine FastAPI-Anwendung nach Clean-Architecture- und SOLID-Prinzipien. Verträge werden extrahiert, regelbasiert analysiert, bewertet und optional durch eine lokale KI angereichert, die auf einem kuratierten Rechtskorpus basiert.",
+    "items": [
+      {
+        "title": "Erfassung",
+        "body": "PDF- und DOCX-Extraktion sowie reine Texteingabe."
+      },
+      {
+        "title": "Regelbasierte Engine",
+        "body": "Deterministische Klauselerkennung und Compliance-Prüfungen."
+      },
+      {
+        "title": "Redlining-Engine",
+        "body": "Playbook-basierte Vorschläge mit Konfidenzbewertung."
+      },
+      {
+        "title": "Risikobewertung",
+        "body": "Gesamt-, DSGVO- und EU-KI-Verordnung-Scores auf einer Skala von 0 bis 100."
+      },
+      {
+        "title": "RAG-Pipeline",
+        "body": "ChromaDB-Vektorspeicher mit sentence-transformers-Embeddings und Top-3-Abruf."
+      },
+      {
+        "title": "Lokale KI",
+        "body": "Llama 3 über Ollama, pro Anfrage optional, mit sauberem Fallback."
+      },
+      {
+        "title": "Berichte",
+        "body": "Professionelle PDF-Berichte mit zitierten Rechtsquellen."
+      }
+    ]
+  },
+  "privacy": {
+    "eyebrow": "Datenschutz & Compliance",
+    "title": "Privat durch Architektur",
+    "body": "Keine externen API-Aufrufe. Die gesamte Verarbeitung läuft lokal oder in Docker, sodass vertrauliche Vertragstexte Ihren Rechner nie verlassen.",
+    "items": [
+      {
+        "title": "Lokale KI-Ausführung",
+        "body": "Llama 3 läuft über Ollama auf Ihrer eigenen Hardware."
+      },
+      {
+        "title": "Datenschutz durch Design",
+        "body": "On-Premise-Verarbeitung bedeutet: Kein Cloud-Anbieter sieht Ihre Verträge."
+      },
+      {
+        "title": "Menschliche Kontrolle",
+        "body": "Nehmen Sie jeden Änderungsvorschlag an oder lehnen Sie ihn ab; das Tool ändert niemals automatisch."
+      },
+      {
+        "title": "Nachvollziehbarkeit",
+        "body": "KI-Zusammenfassungen sind an abgerufene Quellen gebunden, angezeigt mit Titel, Dateiname und Auszug."
+      },
+      {
+        "title": "Compliance-Readiness",
+        "body": "DSGVO- und EU-KI-Verordnung-Readiness-Prüfungen — Readiness, keine Zertifizierung."
+      },
+      {
+        "title": "Praktischer Betrieb",
+        "body": "Docker-Image mit Healthchecks und Ausführung ohne Root-Rechte."
+      }
+    ]
+  },
+  "limitations": {
+    "eyebrow": "Grenzen & Haftungsausschluss",
+    "title": "Ehrlich über die Grenzen",
+    "disclaimer": "Dies ist keine Rechtsberatung.",
+    "intro": "Namag ist ein Compliance-Readiness-Werkzeug für Rechtsexpertinnen und -experten, kein Ersatz für eine qualifizierte rechtliche Prüfung.",
+    "items": [
+      {
+        "title": "Schlagwortbasierte Erkennung",
+        "body": "Die Klauselerkennung beruht auf Schlagworten, nicht auf semantischem NLP; umschriebene Klauseln können übersehen werden."
+      },
+      {
+        "title": "Nur Englisch",
+        "body": "Schlagwortregeln, Playbooks und die Wissensbasis sind vollständig auf Englisch."
+      },
+      {
+        "title": "Einzeldokument-Analyse",
+        "body": "Keine Stapel- oder Mehrdokument-Workflows."
+      },
+      {
+        "title": "KI-Qualität variiert",
+        "body": "Llama-3-Zusammenfassungen und -Verfeinerungen sind Näherungen und erfordern stets menschliche Prüfung."
+      },
+      {
+        "title": "Keine persistente Speicherung",
+        "body": "Ergebnisse werden nur im Speicher gehalten; es gibt keine Datenbank oder Historie."
+      },
+      {
+        "title": "Keine Authentifizierung",
+        "body": "Die API hat keine Authentifizierungsschicht und ist nicht für die direkte Exposition im öffentlichen Internet gedacht."
+      },
+      {
+        "title": "Playbook-Abdeckung",
+        "body": "Ausgeliefert werden allgemeine EU- und US-Playbooks; andere Rechtsordnungen erfordern manuelle Erstellung."
+      }
+    ],
+    "note": "Risikobewertungen sind eine interne 0-bis-100-Einschätzung, kein rechtliches Urteil. Readiness-Prüfungen sind keine Zertifizierung."
+  },
+  "opensource": {
+    "eyebrow": "Open Source",
+    "title": "Frei, offen und getestet",
+    "body": "Namag ist MIT-lizenziert und Open Source. Die vollständige Suite mit 96 Tests besteht bei jedem Push und Pull Request.",
+    "items": [
+      {
+        "title": "MIT-Lizenz",
+        "body": "Frei nutzen, verändern und weitergeben."
+      },
+      {
+        "title": "96/96 Tests bestanden",
+        "body": "Eine automatisierte pytest-Suite für API, Modelle, Engine, Playbooks und PDF-Erzeugung."
+      },
+      {
+        "title": "CI auf GitHub Actions",
+        "body": "Tests laufen bei jedem Push und Pull Request."
+      },
+      {
+        "title": "Docker mit Healthchecks",
+        "body": "Ein produktionsreifes Container-Image ohne Root-Rechte."
+      }
+    ]
+  },
+  "roadmap": {
+    "eyebrow": "Roadmap",
+    "title": "Ausblick",
+    "label": "Geplant — noch nicht verfügbar",
+    "intro": "Diese Punkte sind in der Projekt-Roadmap dokumentiert und noch nicht umgesetzt.",
+    "items": [
+      "Risiko-Dashboard",
+      "Getrennte Docker-Images",
+      "Weitere Dateiformate",
+      "Stapelanalyse",
+      "NLP-basierte Klauselerkennung",
+      "Persistente Speicherung",
+      "Mehrsprachigkeit"
+    ]
+  },
+  "about": {
+    "eyebrow": "Über das Projekt",
+    "title": "Entwickelt von einem Juristen, der programmiert",
+    "body": "Namag wird von Soheil Onsori gepflegt, einem Juristen (LL.B.) und Entwickler. Der Entwickler ist kein zugelassener Rechtsanwalt: Dieses Projekt bietet keine Rechtsvertretung, Zertifizierung oder behördliche Zulassung.",
+    "focus": "Im Fokus: datenschutzorientierte Rechts-KI."
+  },
+  "contact": {
+    "eyebrow": "Kontakt",
+    "title": "Kontakt über GitHub",
+    "body": "Das Projekt lebt auf GitHub. Melden Sie Fehler, schlagen Sie Funktionen vor oder durchsuchen Sie den Quellcode.",
+    "repository": "Repository",
+    "issues": "Problem melden"
+  },
+  "footer": {
+    "privacyNote": "Läuft lokal. Keine Cloud, keine Tracker, keine Cookies.",
+    "license": "MIT-Lizenz",
+    "builtWith": "Entwickelt mit Python, FastAPI, lokalen LLMs und RAG."
+  },
+  "notfound": {
+    "title": "Seite nicht gefunden",
+    "body": "Die gesuchte Seite existiert nicht.",
+    "home": "Zurück zur Startseite"
+  }
+}

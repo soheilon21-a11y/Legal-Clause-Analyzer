@@ -1,0 +1,17 @@
+---
+const { t } = Astro.props;
+const repo = 'https://github.com/soheilon21-a11y/Legal-Clause-Analyzer';
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>
+      <p class="footer-brand"><strong>{t.brand.name}</strong> {t.brand.descriptor}</p>
+      <p class="footer-note">{t.footer.privacyNote}</p>
+    </div>
+    <div>
+      <p class="footer-meta"><a class="footer-link" href={repo}>{t.footer.license}</a></p>
+      <p class="footer-built">{t.footer.builtWith}</p>
+    </div>
+  </div>
+</footer>

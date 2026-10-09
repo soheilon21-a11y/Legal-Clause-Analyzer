@@ -1,0 +1,11 @@
+---
+const { t, lang } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const enHref = base;
+const deHref = base + 'de/';
+---
+
+<div class="lang-toggle">
+  <a href={enHref} lang="en" hreflang="en" aria-label={t.lang.enAria} aria-current={lang === 'en' ? 'page' : undefined}>{t.lang.en}</a>
+  <a href={deHref} lang="de" hreflang="de" aria-label={t.lang.deAria} aria-current={lang === 'de' ? 'page' : undefined}>{t.lang.de}</a>
+</div>
